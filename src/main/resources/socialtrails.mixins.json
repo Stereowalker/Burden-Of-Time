@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.stereowalker.socialtrails.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "EntityMixin",
+    "WorldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

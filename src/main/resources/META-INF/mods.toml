@@ -1,0 +1,46 @@
+
+modLoader="javafml"
+loaderVersion="[35,)"
+license="Creative Commons Attribution-NonCommercial-NoDerivatives 4.0"
+issueTrackerURL="https://github.com/Stereowalker/Social-Trails/issues"
+logoFile="logo.png"
+[[mods]]
+modId="socialtrails"
+version="${version}"
+displayName="Social Trails"
+updateJSONURL="https://raw.githubusercontent.com/Stereowalker/Social-Trails/master/update.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/social-trails"
+credits="Obviously you for downloading this mod"
+authors="Stereowalker"
+description='''
+Social Trails adds well, social trails to Minecraft. Whenever a player or mob walks on a certain path for a certain amount of time, it begins to erode. 
+'''
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.socialtrails]] #optional
+    # the modid of the dependency
+    modId="forge" #mandatory
+    # Does this dependency have to exist - if not, ordering below must be specified
+    mandatory=true #mandatory
+    # The version range of the dependency
+    versionRange="[35.1.13,)" #mandatory
+    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+    ordering="NONE"
+    # Side this dependency is applied on - BOTH, CLIENT or SERVER
+    side="BOTH"
+# Here's another dependency
+[[dependencies.socialtrails]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.3,)"
+    ordering="NONE"
+    side="BOTH"
+	
+[[dependencies.socialtrails]]
+    modId="unionlib"
+    mandatory=true
+    versionRange="[3.2.6,)"
+    ordering="NONE"
+    side="BOTH"
+
+	
+
