@@ -1,6 +1,7 @@
 {
   "required": true,
   "package": "com.stereowalker.socialtrails.mixin",
+  "refmap": "socialtrails.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "EntityMixin",
