@@ -1,10 +1,10 @@
-package com.stereowalker.socialtrails.world;
+package com.stereowalker.burdenoftime.world;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 import com.google.gson.Gson;
-import com.stereowalker.socialtrails.SocialTrails;
+import com.stereowalker.burdenoftime.BurdenOfTime;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
@@ -16,7 +16,7 @@ import net.minecraft.world.storage.WorldSavedData;
 
 public class ErosionMap extends WorldSavedData
 {
-    public static final String KEY = SocialTrails.instance.getModid() + "erosion_map";
+    public static final String KEY = BurdenOfTime.instance.getModid() + "erosion_map";
 
     public HashMap<BlockPos, Float> erosionMap = new HashMap<>();
     private Gson gson;

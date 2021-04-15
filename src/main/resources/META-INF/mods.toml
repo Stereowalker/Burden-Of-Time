@@ -5,7 +5,7 @@ license="Creative Commons Attribution-NonCommercial-NoDerivatives 4.0"
 issueTrackerURL="https://github.com/Stereowalker/Social-Trails/issues"
 logoFile="logo.png"
 [[mods]]
-modId="socialtrails"
+modId="burdenoftime"
 version="${version}"
 displayName="Social Trails"
 updateJSONURL="https://raw.githubusercontent.com/Stereowalker/Social-Trails/master/update.json"
@@ -16,7 +16,7 @@ description='''
 Social Trails adds well, social trails to Minecraft. Whenever a player or mob walks on a certain path for a certain amount of time, it begins to erode. 
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.socialtrails]] #optional
+[[dependencies.burdenoftime]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -28,14 +28,14 @@ Social Trails adds well, social trails to Minecraft. Whenever a player or mob wa
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.socialtrails]]
+[[dependencies.burdenoftime]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.16.3,)"
     ordering="NONE"
     side="BOTH"
 	
-[[dependencies.socialtrails]]
+[[dependencies.burdenoftime]]
     modId="unionlib"
     mandatory=true
     versionRange="[3.2.6,)"

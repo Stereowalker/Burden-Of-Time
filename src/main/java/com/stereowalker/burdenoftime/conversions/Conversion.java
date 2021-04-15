@@ -1,28 +1,25 @@
-package com.stereowalker.socialtrails.blocks;
+package com.stereowalker.burdenoftime.conversions;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.ResourceLocationException;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class TrailConversions
+public class Conversion
 {
     public Block from;
     public Block to;
-    public float requiredDepth;
 
-    public TrailConversions(Block from, Block to, float requiredDepth)
+    public Conversion(Block from, Block to)
     {
         this.from = from;
         this.to = to;
-        this.requiredDepth = requiredDepth;
     }
 
-    public TrailConversions(String from, String to, float requiredDepth)
+    public Conversion(String from, String to)
     {
         ResourceLocation fromBlock = ResourceLocation.tryCreate(from);
         ResourceLocation toBlock = ResourceLocation.tryCreate(to);
-        this.requiredDepth = requiredDepth;
 
         if (fromBlock == null || toBlock == null)
             throw new ResourceLocationException("An invalid pathlink has been detected: {" + from + ", " + to + "}");

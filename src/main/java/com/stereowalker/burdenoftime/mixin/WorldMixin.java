@@ -1,4 +1,4 @@
-package com.stereowalker.socialtrails.mixin;
+package com.stereowalker.burdenoftime.mixin;
 
 import javax.annotation.Nullable;
 
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stereowalker.socialtrails.world.ErosionMap;
+import com.stereowalker.burdenoftime.world.ErosionMap;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
@@ -39,8 +39,6 @@ public abstract class WorldMixin
             ErosionMap depthMapState = ErosionMap.getInstance(server, getDimensionKey());
             depthMapState.erosionMap.remove(pos);
             depthMapState.setDirty(true);
-
-//            OlifantenpadInitialiser.log(Level.DEBUG, "Depth entry at " + pos + " reset...");
         }
     }
 }

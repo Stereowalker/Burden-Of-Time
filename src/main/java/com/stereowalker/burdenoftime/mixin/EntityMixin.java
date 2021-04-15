@@ -1,4 +1,4 @@
-package com.stereowalker.socialtrails.mixin;
+package com.stereowalker.burdenoftime.mixin;
 
 import java.util.Random;
 
@@ -9,9 +9,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stereowalker.socialtrails.blocks.TrailConversions;
-import com.stereowalker.socialtrails.config.Config;
-import com.stereowalker.socialtrails.world.ErosionMap;
+import com.stereowalker.burdenoftime.config.Config;
+import com.stereowalker.burdenoftime.conversions.Conversions;
+import com.stereowalker.burdenoftime.conversions.TrampleConversion;
+import com.stereowalker.burdenoftime.world.ErosionMap;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -73,7 +74,7 @@ public abstract class EntityMixin
 
 		depthMapState.setDirty(true);
 
-		for (TrailConversions conversion : Config.conversions)
+		for (TrampleConversion conversion : Conversions.trample_conversions)
 		{
 			if (conversion.from == state.getBlock() && currentDepth > conversion.requiredDepth)
 			{
