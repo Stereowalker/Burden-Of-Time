@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.stereowalker.socialtrails.mixin",
+  "package": "com.stereowalker.burdenoftime.mixin",
   "refmap": "socialtrails.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "mixins": [

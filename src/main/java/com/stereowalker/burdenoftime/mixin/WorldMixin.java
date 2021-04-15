@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.stereowalker.burdenoftime.world.AgeMap;
 import com.stereowalker.burdenoftime.world.ErosionMap;
 
 import net.minecraft.block.BlockState;
@@ -39,6 +40,10 @@ public abstract class WorldMixin
             ErosionMap depthMapState = ErosionMap.getInstance(server, getDimensionKey());
             depthMapState.erosionMap.remove(pos);
             depthMapState.setDirty(true);
+            
+            AgeMap ageMapState = AgeMap.getInstance(server, getDimensionKey());
+            ageMapState.ageMap.remove(pos);
+            ageMapState.setDirty(true);
         }
     }
 }

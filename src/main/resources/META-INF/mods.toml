@@ -2,18 +2,18 @@
 modLoader="javafml"
 loaderVersion="[35,)"
 license="Creative Commons Attribution-NonCommercial-NoDerivatives 4.0"
-issueTrackerURL="https://github.com/Stereowalker/Social-Trails/issues"
-logoFile="logo.png"
+issueTrackerURL="https://github.com/Stereowalker/Burden-Of-Time/issues"
+logoFile="pack.png"
 [[mods]]
 modId="burdenoftime"
 version="${version}"
-displayName="Social Trails"
-updateJSONURL="https://raw.githubusercontent.com/Stereowalker/Social-Trails/master/update.json"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/social-trails"
-credits="Obviously you for downloading this mod"
+displayName="Burden Of Time"
+updateJSONURL="https://raw.githubusercontent.com/Stereowalker/Burden-Of-Time/master/update.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/burden-of-time"
+credits="I'd like to thank my Obsidian Patreon, Komorebi, and you for downloading this mod"
 authors="Stereowalker"
 description='''
-Social Trails adds well, social trails to Minecraft. Whenever a player or mob walks on a certain path for a certain amount of time, it begins to erode. 
+Burden Of Time is a mod that allows your world to age without input from the player.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.burdenoftime]] #optional
@@ -38,7 +38,7 @@ Social Trails adds well, social trails to Minecraft. Whenever a player or mob wa
 [[dependencies.burdenoftime]]
     modId="unionlib"
     mandatory=true
-    versionRange="[3.2.6,)"
+    versionRange="[3.3.0, 3.3.999)"
     ordering="NONE"
     side="BOTH"
 
