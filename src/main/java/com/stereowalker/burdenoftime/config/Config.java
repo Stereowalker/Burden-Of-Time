@@ -17,5 +17,5 @@ public class Config
     
     @UnionConfig.Entry(group = "Ageing", name = "Ageing Chance")
     @UnionConfig.Range(min = 0, max = 1000)
-    public static int chanceForBlockToAge = 10;
+    public static int chanceForBlockToAge = 800;
 }
