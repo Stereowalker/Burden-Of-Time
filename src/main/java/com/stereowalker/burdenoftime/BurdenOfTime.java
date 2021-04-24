@@ -10,7 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -29,7 +30,7 @@ public class BurdenOfTime extends UnionMod {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::setup);
 		modEventBus.addListener(this::clientRegistries);
-		MinecraftForge.EVENT_BUS.register(this);
+		//MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	private void setup(final FMLCommonSetupEvent event)
@@ -42,6 +43,7 @@ public class BurdenOfTime extends UnionMod {
 	}
 	
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
 		return new ConfigScreen(previousScreen, Config.class, new TranslationTextComponent("burdenoftime.gui.config"));
 	}
