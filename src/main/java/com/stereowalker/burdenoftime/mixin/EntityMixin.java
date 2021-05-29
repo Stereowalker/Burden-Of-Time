@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.stereowalker.burdenoftime.config.Config;
 import com.stereowalker.burdenoftime.conversions.Conversions;
-import com.stereowalker.burdenoftime.conversions.TrampleConversion;
-import com.stereowalker.burdenoftime.world.ErosionMap;
+import com.stereowalker.burdenoftime.conversions.TrampleErosionConversion;
+import com.stereowalker.burdenoftime.world.TrampleErosionMap;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -63,7 +63,7 @@ public abstract class EntityMixin
 		if (Config.chanceForGroundToErode < rand.nextInt(1000) || intensity < 0.01 || (isSneaking() && Config.sneakPreventsTrail))
 			return;
 
-		ErosionMap depthMapState = ErosionMap.getInstance(server, world.getDimensionKey());
+		TrampleErosionMap depthMapState = TrampleErosionMap.getInstance(server, world.getDimensionKey());
 		BlockPos pos = getOnPosition();
 		BlockState state = world.getBlockState(pos);
 
@@ -74,12 +74,9 @@ public abstract class EntityMixin
 
 		depthMapState.setDirty(true);
 
-		for (TrampleConversion conversion : Conversions.trample_conversions)
+		for (TrampleErosionConversion conversion : Conversions.trample_conversions)
 		{
-			if (conversion.from == state.getBlock() && currentDepth > conversion.requiredDepth)
-			{
-				world.setBlockState(pos, conversion.to.getDefaultState(), 11);
-			}
+			conversion.handleConversion(world, pos, state, currentDepth, conversion.requiredDepth);
 		}
 	}
 }

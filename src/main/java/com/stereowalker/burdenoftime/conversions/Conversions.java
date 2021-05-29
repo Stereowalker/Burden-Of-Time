@@ -9,17 +9,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class Conversions {
-	public static TrampleConversion[] trample_conversions = new TrampleConversion[]{
-			new TrampleConversion("minecraft:grass_block", "minecraft:dirt", 10f),
-			new TrampleConversion("minecraft:dirt", "minecraft:coarse_dirt", 10f),
-			new TrampleConversion("minecraft:coarse_dirt", "minecraft:grass_path", 10f),
+	public static TrampleErosionConversion[] trample_conversions = new TrampleErosionConversion[]{
+			new TrampleErosionConversion("minecraft:grass_block", "minecraft:dirt", 10f),
+			new TrampleErosionConversion("minecraft:dirt", "minecraft:coarse_dirt", 10f),
+			new TrampleErosionConversion("minecraft:coarse_dirt", "minecraft:grass_path", 10f),
 	};
 
-	public static List<AgeConversion> ageing_conversions = Lists.newArrayList();
+	public static List<AgeErosionConversion> ageing_conversions = Lists.newArrayList();
 
 	private static void registerAgeConversions(String from, String to, int requiredAge) {
 		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
-			ageing_conversions.add(new AgeConversion(from, to, requiredAge));
+			ageing_conversions.add(new AgeErosionConversion(from, to, requiredAge));
 		} else {
 			String message = "";
 			boolean flag = false;
@@ -35,7 +35,31 @@ public class Conversions {
 					+ "then install that mod for this age conversion to work. If the required mod is already installed and you get this message, then report this issue to the mod developer");
 		}
 	}
-	
+
+	public static List<FluidErosionConversion> erosion_conversions = Lists.newArrayList();
+
+	private static void registerErosionConversions(String from, String to, int requiredAge, String... requiredFluids) {
+		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+			for (String requiredFluid : requiredFluids) {
+				if (ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(requiredFluid)))
+					erosion_conversions.add(new FluidErosionConversion(from, to, requiredAge, requiredFluid));
+			}
+		} else {
+			String message = "";
+			boolean flag = false;
+			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from))) message = from;
+			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+				if (message.isEmpty()) message = to;
+				else {
+					message = from + " and " + to;
+					flag = true;
+				}
+			}
+			BurdenOfTime.instance.LOGGER.warn("The Block"+(flag?"s ":" ")+message+" does not currently exist. If "+(flag?"these blocks are ":"this block is ")+" from another mod, "
+					+ "then install that mod for this age conversion to work. If the required mod is already installed and you get this message, then report this issue to the mod developer");
+		}
+	}
+
 	public static void regeisterAllConversions() {
 		registerAgeConversions("minecraft:cobblestone", "minecraft:mossy_cobblestone", 10);
 		registerAgeConversions("minecraft:cobblestone_slab", "minecraft:mossy_cobblestone_slab", 10);
@@ -68,5 +92,42 @@ public class Conversions {
 		registerAgeConversions("iceandfire:dread_stone_bricks", "iceandfire:dread_stone_bricks_mossy", 10);
 		//Quark
 		registerAgeConversions("minecraft:cobblestone_bricks", "minecraft:mossy_cobblestone_bricks", 10);
+
+		//
+		registerErosionConversions("minecraft:stone", "minecraft:cobblestone", 5, "minecraft:flowing_water");
+		registerErosionConversions("minecraft:stone_slab", "minecraft:cobblestone_slab", 5, "minecraft:flowing_water");
+		registerErosionConversions("minecraft:stone_stairs", "minecraft:cobblestone_stairs", 5, "minecraft:flowing_water");
+		registerErosionConversions("minecraft:stone_bricks", "minecraft:cracked_stone_bricks", 5, "minecraft:flowing_water");
+		registerErosionConversions("minecraft:polished_blackstone_bricks", "minecraft:cracked_polished_blackstone_bricks", 5, "minecraft:flowing_water");
+		registerErosionConversions("minecraft:nether_bricks", "minecraft:cracked_polished_nether_bricks", 5, "minecraft:flowing_water");
+		
+		registerErosionConversions("minecraft:light_gray_terracotta", "minecraft:light_gray_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:black_terracotta", "minecraft:black_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:magenta_terracotta", "minecraft:magenta_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:light_blue_terracotta", "minecraft:light_blue_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:purple_terracotta", "minecraft:purple_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:pink_terracotta", "minecraft:pink_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:brown_terracotta", "minecraft:brown_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:white_terracotta", "minecraft:white_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:red_terracotta", "minecraft:red_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:yellow_terracotta", "minecraft:yellow_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:cyan_terracotta", "minecraft:cyan_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:green_terracotta", "minecraft:green_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:orange_terracotta", "minecraft:orange_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:gray_terracotta", "minecraft:gray_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:lime_terracotta", "minecraft:lime_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:blue_terracotta", "minecraft:blue_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:cobblesone", "minecraft:stone", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:quartz_block", "minecraft:smooth_quartz", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:sandstone", "minecraft:smooth_sandstone", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:wet_sponge", "minecraft:sponge", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:stone_bricks", "minecraft:cracked_stone_bricks", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:stone", "minecraft:smooth_stone", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:sand", "minecraft:glass", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:red_sand", "minecraft:glass", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:clay", "minecraft:terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:red_sandstone", "minecraft:smooth_red_sandstone", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:polished_blackstone_bricks", "minecraft:cracked_polished_blackstone_bricks", 4, "minecraft:flowing_lava", "minecraft:lava");
+		registerErosionConversions("minecraft:nether_bricks", "minecraft:cracked_polished_nether_bricks", 4, "minecraft:flowing_lava", "minecraft:lava");
 	}
 }

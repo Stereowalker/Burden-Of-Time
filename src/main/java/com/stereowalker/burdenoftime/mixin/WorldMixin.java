@@ -8,8 +8,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stereowalker.burdenoftime.world.AgeMap;
-import com.stereowalker.burdenoftime.world.ErosionMap;
+import com.stereowalker.burdenoftime.world.AgeErosionMap;
+import com.stereowalker.burdenoftime.world.FluidErosionMap;
+import com.stereowalker.burdenoftime.world.TrampleErosionMap;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
@@ -37,13 +38,17 @@ public abstract class WorldMixin
             if (server == null)
                 return;
 
-            ErosionMap depthMapState = ErosionMap.getInstance(server, getDimensionKey());
+            TrampleErosionMap depthMapState = TrampleErosionMap.getInstance(server, getDimensionKey());
             depthMapState.erosionMap.remove(pos);
             depthMapState.setDirty(true);
             
-            AgeMap ageMapState = AgeMap.getInstance(server, getDimensionKey());
+            AgeErosionMap ageMapState = AgeErosionMap.getInstance(server, getDimensionKey());
             ageMapState.ageMap.remove(pos);
             ageMapState.setDirty(true);
+            
+            FluidErosionMap fluidMapState = FluidErosionMap.getInstance(server, getDimensionKey());
+            fluidMapState.wearMap.remove(pos);
+            fluidMapState.setDirty(true);
         }
     }
 }

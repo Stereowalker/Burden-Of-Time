@@ -14,14 +14,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
-public class ErosionMap extends WorldSavedData
+public class AgeErosionMap extends WorldSavedData
 {
-    public static final String KEY = BurdenOfTime.instance.getModid() + "erosion_map";
+    public static final String KEY = BurdenOfTime.instance.getModid() + "age_map";
 
-    public HashMap<BlockPos, Float> erosionMap = new HashMap<>();
+    public HashMap<BlockPos, Integer> ageMap = new HashMap<>();
     private Gson gson;
 
-    private ErosionMap()
+    private AgeErosionMap()
     {
         super(KEY);
         gson = new Gson();
@@ -30,10 +30,10 @@ public class ErosionMap extends WorldSavedData
     @Override
     public CompoundNBT write(CompoundNBT tag)
     {
-        for (BlockPos entry : erosionMap.keySet())
+        for (BlockPos entry : ageMap.keySet())
         {
-            float depth = erosionMap.get(entry);
-            tag.putFloat(gson.toJson(entry), depth);
+            int age = ageMap.get(entry);
+            tag.putInt(gson.toJson(entry), age);
         }
         return tag;
     }
@@ -41,21 +41,21 @@ public class ErosionMap extends WorldSavedData
     @Override
     public void read(CompoundNBT tag)
     {
-        erosionMap.clear();
+        ageMap.clear();
 
         for (String entry : tag.keySet())
         {
-            float depth = tag.getFloat(entry);
+            int age = tag.getInt(entry);
             BlockPos pos = gson.fromJson(entry, BlockPos.class);
 
-            erosionMap.put(pos, depth);
+            ageMap.put(pos, age);
         }
 
     }
 
-    public static ErosionMap getInstance(MinecraftServer server, RegistryKey<World> dimension)
+    public static AgeErosionMap getInstance(MinecraftServer server, RegistryKey<World> dimension)
     {
     	DimensionSavedDataManager manager = Objects.requireNonNull(server.getWorld(dimension)).getSavedData();
-        return manager.getOrCreate(ErosionMap::new, KEY);
+        return manager.getOrCreate(AgeErosionMap::new, KEY);
     }
 }

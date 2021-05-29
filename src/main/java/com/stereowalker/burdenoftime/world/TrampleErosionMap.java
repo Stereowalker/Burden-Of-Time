@@ -14,14 +14,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
-public class AgeMap extends WorldSavedData
+public class TrampleErosionMap extends WorldSavedData
 {
-    public static final String KEY = BurdenOfTime.instance.getModid() + "age_map";
+    public static final String KEY = BurdenOfTime.instance.getModid() + "erosion_map";
 
-    public HashMap<BlockPos, Integer> ageMap = new HashMap<>();
+    public HashMap<BlockPos, Float> erosionMap = new HashMap<>();
     private Gson gson;
 
-    private AgeMap()
+    private TrampleErosionMap()
     {
         super(KEY);
         gson = new Gson();
@@ -30,10 +30,10 @@ public class AgeMap extends WorldSavedData
     @Override
     public CompoundNBT write(CompoundNBT tag)
     {
-        for (BlockPos entry : ageMap.keySet())
+        for (BlockPos entry : erosionMap.keySet())
         {
-            int age = ageMap.get(entry);
-            tag.putInt(gson.toJson(entry), age);
+            float depth = erosionMap.get(entry);
+            tag.putFloat(gson.toJson(entry), depth);
         }
         return tag;
     }
@@ -41,21 +41,21 @@ public class AgeMap extends WorldSavedData
     @Override
     public void read(CompoundNBT tag)
     {
-        ageMap.clear();
+        erosionMap.clear();
 
         for (String entry : tag.keySet())
         {
-            int age = tag.getInt(entry);
+            float depth = tag.getFloat(entry);
             BlockPos pos = gson.fromJson(entry, BlockPos.class);
 
-            ageMap.put(pos, age);
+            erosionMap.put(pos, depth);
         }
 
     }
 
-    public static AgeMap getInstance(MinecraftServer server, RegistryKey<World> dimension)
+    public static TrampleErosionMap getInstance(MinecraftServer server, RegistryKey<World> dimension)
     {
     	DimensionSavedDataManager manager = Objects.requireNonNull(server.getWorld(dimension)).getSavedData();
-        return manager.getOrCreate(AgeMap::new, KEY);
+        return manager.getOrCreate(TrampleErosionMap::new, KEY);
     }
 }
