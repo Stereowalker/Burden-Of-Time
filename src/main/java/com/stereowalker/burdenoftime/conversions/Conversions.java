@@ -19,6 +19,12 @@ public class Conversions {
 
 	private static void registerAgeConversions(String from, String to, int requiredAge) {
 		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+			for (AgeErosionConversion conversion : ageing_conversions) {
+				if (conversion.from.getRegistryName().equals(new ResourceLocation(from))) {
+					ageing_conversions.remove(conversion);
+					break;
+				}
+			}
 			ageing_conversions.add(new AgeErosionConversion(from, to, requiredAge));
 		} else {
 			String message = "";
@@ -36,13 +42,20 @@ public class Conversions {
 		}
 	}
 
-	public static List<FluidErosionConversion> erosion_conversions = Lists.newArrayList();
+	public static List<FluidErosionConversion> fluid_conversions = Lists.newArrayList();
 
 	private static void registerErosionConversions(String from, String to, int requiredAge, String... requiredFluids) {
 		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
 			for (String requiredFluid : requiredFluids) {
-				if (ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(requiredFluid)))
-					erosion_conversions.add(new FluidErosionConversion(from, to, requiredAge, requiredFluid));
+				if (ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(requiredFluid))) {
+					for (FluidErosionConversion conversion : fluid_conversions) {
+						if (conversion.from.getRegistryName().equals(new ResourceLocation(from))) {
+							fluid_conversions.remove(conversion);
+							break;
+						}
+					}
+					fluid_conversions.add(new FluidErosionConversion(from, to, requiredAge, requiredFluid));
+				}
 			}
 		} else {
 			String message = "";

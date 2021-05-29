@@ -79,7 +79,7 @@ public abstract class ServerWorldMixin
 			return;
 
 
-		for (FluidErosionConversion conversion : Conversions.erosion_conversions)
+		for (FluidErosionConversion conversion : Conversions.fluid_conversions)
 		{
 			if (world.getFluidState(pos.up()).getFluid() == conversion.requiredFluid 
 					|| world.getFluidState(pos.north()).getFluid() == conversion.requiredFluid
