@@ -19,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidErosionMap extends WorldSavedData
 {
-    public static final String KEY = BurdenOfTime.instance.getModid() + "fluid_map";
+    public static final String KEY = BurdenOfTime.getInstance().getModid() + "fluid_map";
 
     public HashMap<BlockPos, HashMap<Fluid, Integer>> wearMap = new HashMap<>();
     private Gson gson;

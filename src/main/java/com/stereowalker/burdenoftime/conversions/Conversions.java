@@ -9,15 +9,36 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class Conversions {
-	public static TrampleErosionConversion[] trample_conversions = new TrampleErosionConversion[]{
-			new TrampleErosionConversion("minecraft:grass_block", "minecraft:dirt", 10f),
-			new TrampleErosionConversion("minecraft:dirt", "minecraft:coarse_dirt", 10f),
-			new TrampleErosionConversion("minecraft:coarse_dirt", "minecraft:grass_path", 10f),
-	};
+	public static List<TrampleErosionConversion> trample_conversions = Lists.newArrayList();
+	
+	public static void registerTrampleConversions(String from, String to, float requiredDepth) {
+		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+			for (TrampleErosionConversion conversion : trample_conversions) {
+				if (conversion.from.getRegistryName().equals(new ResourceLocation(from))) {
+					trample_conversions.remove(conversion);
+					break;
+				}
+			}
+			trample_conversions.add(new TrampleErosionConversion(from, to, requiredDepth));
+		} else {
+			String message = "";
+			boolean flag = false;
+			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from))) message = from;
+			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+				if (message.isEmpty()) message = to;
+				else {
+					message = from + " and " + to;
+					flag = true;
+				}
+			}
+			BurdenOfTime.getInstance().getLogger().warn("The Block"+(flag?"s ":" ")+message+" does not currently exist. If "+(flag?"these blocks are ":"this block is ")+" from another mod, "
+					+ "then install that mod for this trample conversion to work. If the required mod is already installed and you get this message, then report this issue to the mod developer");
+		}
+	}
 
 	public static List<AgeErosionConversion> ageing_conversions = Lists.newArrayList();
 
-	private static void registerAgeConversions(String from, String to, int requiredAge) {
+	public static void registerAgeConversions(String from, String to, int requiredAge) {
 		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
 			for (AgeErosionConversion conversion : ageing_conversions) {
 				if (conversion.from.getRegistryName().equals(new ResourceLocation(from))) {
@@ -37,19 +58,19 @@ public class Conversions {
 					flag = true;
 				}
 			}
-			BurdenOfTime.instance.LOGGER.warn("The Block"+(flag?"s ":" ")+message+" does not currently exist. If "+(flag?"these blocks are ":"this block is ")+" from another mod, "
+			BurdenOfTime.getInstance().getLogger().warn("The Block"+(flag?"s ":" ")+message+" does not currently exist. If "+(flag?"these blocks are ":"this block is ")+" from another mod, "
 					+ "then install that mod for this age conversion to work. If the required mod is already installed and you get this message, then report this issue to the mod developer");
 		}
 	}
 
 	public static List<FluidErosionConversion> fluid_conversions = Lists.newArrayList();
 
-	private static void registerErosionConversions(String from, String to, int requiredAge, String... requiredFluids) {
+	public static void registerErosionConversions(String from, String to, int requiredAge, String... requiredFluids) {
 		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
 			for (String requiredFluid : requiredFluids) {
 				if (ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(requiredFluid))) {
 					for (FluidErosionConversion conversion : fluid_conversions) {
-						if (conversion.from.getRegistryName().equals(new ResourceLocation(from))) {
+						if (conversion.from.getRegistryName().equals(new ResourceLocation(from)) && conversion.requiredFluid.getRegistryName().equals(new ResourceLocation(requiredFluid))) {
 							fluid_conversions.remove(conversion);
 							break;
 						}
@@ -68,12 +89,18 @@ public class Conversions {
 					flag = true;
 				}
 			}
-			BurdenOfTime.instance.LOGGER.warn("The Block"+(flag?"s ":" ")+message+" does not currently exist. If "+(flag?"these blocks are ":"this block is ")+" from another mod, "
+			BurdenOfTime.getInstance().getLogger().warn("The Block"+(flag?"s ":" ")+message+" does not currently exist. If "+(flag?"these blocks are ":"this block is ")+" from another mod, "
 					+ "then install that mod for this age conversion to work. If the required mod is already installed and you get this message, then report this issue to the mod developer");
 		}
 	}
 
 	public static void regeisterAllConversions() {
+		
+
+		registerTrampleConversions("minecraft:grass_block", "minecraft:dirt", 10f);
+		registerTrampleConversions("minecraft:dirt", "minecraft:coarse_dirt", 10f);
+		registerTrampleConversions("minecraft:coarse_dirt", "minecraft:grass_path", 10f);
+		
 		registerAgeConversions("minecraft:cobblestone", "minecraft:mossy_cobblestone", 10);
 		registerAgeConversions("minecraft:cobblestone_slab", "minecraft:mossy_cobblestone_slab", 10);
 		registerAgeConversions("minecraft:cobblestone_stairs", "minecraft:mossy_cobblestone_stairs", 10);

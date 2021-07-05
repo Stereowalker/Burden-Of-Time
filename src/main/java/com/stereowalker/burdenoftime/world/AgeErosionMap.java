@@ -16,7 +16,7 @@ import net.minecraft.world.storage.WorldSavedData;
 
 public class AgeErosionMap extends WorldSavedData
 {
-    public static final String KEY = BurdenOfTime.instance.getModid() + "age_map";
+    public static final String KEY = BurdenOfTime.getInstance().getModid() + "age_map";
 
     public HashMap<BlockPos, Integer> ageMap = new HashMap<>();
     private Gson gson;

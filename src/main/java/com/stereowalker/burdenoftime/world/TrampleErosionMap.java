@@ -16,7 +16,7 @@ import net.minecraft.world.storage.WorldSavedData;
 
 public class TrampleErosionMap extends WorldSavedData
 {
-    public static final String KEY = BurdenOfTime.instance.getModid() + "erosion_map";
+    public static final String KEY = BurdenOfTime.getInstance().getModid() + "erosion_map";
 
     public HashMap<BlockPos, Float> erosionMap = new HashMap<>();
     private Gson gson;

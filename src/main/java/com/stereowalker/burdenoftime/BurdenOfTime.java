@@ -21,7 +21,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(value = "burdenoftime")
 public class BurdenOfTime extends UnionMod {
 
-	public static BurdenOfTime instance;
+	private static BurdenOfTime instance;
 	
 	public BurdenOfTime() {
 		super("burdenoftime", new ResourceLocation("burdenoftime","textures/icon.png"), LoadType.BOTH);
@@ -46,6 +46,10 @@ public class BurdenOfTime extends UnionMod {
 	@OnlyIn(Dist.CLIENT)
 	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
 		return new ConfigScreen(previousScreen, Config.class, new TranslationTextComponent("burdenoftime.gui.config"));
+	}
+
+	public static BurdenOfTime getInstance() {
+		return instance;
 	}
 
 }
