@@ -36,8 +36,10 @@ public abstract class ServerWorldMixin
 	@Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/chunk/ChunkSection;getBlockState(III)Lnet/minecraft/block/BlockState;", ordinal = 0), method = "tickEnvironment(Lnet/minecraft/world/chunk/Chunk;I)V", locals = LocalCapture.CAPTURE_FAILHARD)
 	public void tickEnvironment(Chunk chunkIn, int randomTickSpeed, CallbackInfo ci, ChunkPos chunkpos, boolean flag, int i, int j, IProfiler iprofiler, ChunkSection var8[], int var9, int var10, ChunkSection chunksection, int k, int l, BlockPos blockpos1, BlockState blockstate)
 	{
-		ageBlock(getWorld(), blockstate, new Random(), blockpos1);
-		erodeBlock(getWorld(), blockstate, new Random(), blockpos1);
+		if (Conversions.tickable_blocks.contains(blockstate.getBlock())) {			
+			ageBlock(getWorld(), blockstate, new Random(), blockpos1);
+			erodeBlock(getWorld(), blockstate, new Random(), blockpos1);
+		}
 	}
 
 	private void ageBlock(ServerWorld world, BlockState blockstate, Random rand, BlockPos pos)

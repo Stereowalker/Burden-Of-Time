@@ -5,10 +5,12 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 
+import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class Conversions {
+	public static List<Block> tickable_blocks = Lists.newArrayList();
 	public static List<TrampleErosionConversion> trample_conversions = Lists.newArrayList();
 	
 	public static void registerTrampleConversions(String from, String to, float requiredDepth) {
@@ -20,6 +22,8 @@ public class Conversions {
 				}
 			}
 			trample_conversions.add(new TrampleErosionConversion(from, to, requiredDepth));
+			if (!tickable_blocks.contains(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from))))
+				tickable_blocks.add(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from)));
 		} else {
 			String message = "";
 			boolean flag = false;
@@ -47,6 +51,8 @@ public class Conversions {
 				}
 			}
 			ageing_conversions.add(new AgeErosionConversion(from, to, requiredAge));
+			if (!tickable_blocks.contains(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from))))
+				tickable_blocks.add(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from)));
 		} else {
 			String message = "";
 			boolean flag = false;
@@ -76,6 +82,8 @@ public class Conversions {
 						}
 					}
 					fluid_conversions.add(new FluidErosionConversion(from, to, requiredAge, requiredFluid));
+					if (!tickable_blocks.contains(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from))))
+						tickable_blocks.add(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from)));
 				}
 			}
 		} else {

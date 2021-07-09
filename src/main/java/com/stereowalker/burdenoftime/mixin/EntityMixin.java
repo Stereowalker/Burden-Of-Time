@@ -47,7 +47,7 @@ public abstract class EntityMixin
 		if (world.isRemote())
 			return;
 
-		if (isSwimming() || !isOnGround()) return;
+		if (isSwimming() || !isOnGround() || !Conversions.tickable_blocks.contains(world.getBlockState(getOnPosition()).getBlock())) return;
 
 		double speed = Math.abs(prevDistanceWalkedModified - distanceWalkedModified);
 
