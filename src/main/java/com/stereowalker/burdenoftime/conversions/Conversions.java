@@ -97,25 +97,24 @@ public class Conversions {
 	public static void regeisterAllConversions() {
 		
 
-		registerTrampleConversions("minecraft:grass_block", "minecraft:dirt", 10f);
-		registerTrampleConversions("minecraft:dirt", "minecraft:coarse_dirt", 10f);
-		registerTrampleConversions("minecraft:coarse_dirt", "minecraft:grass_path", 10f);
+//		registerTrampleConversions("minecraft:grass_block", "minecraft:dirt", 10f);
+//		registerTrampleConversions("minecraft:dirt", "minecraft:coarse_dirt", 10f);
+//		registerTrampleConversions("minecraft:coarse_dirt", "minecraft:grass_path", 10f);
 		
-		registerAgeConversions("minecraft:cobblestone", "minecraft:mossy_cobblestone", 10);
-		registerAgeConversions("minecraft:cobblestone_slab", "minecraft:mossy_cobblestone_slab", 10);
-		registerAgeConversions("minecraft:cobblestone_stairs", "minecraft:mossy_cobblestone_stairs", 10);
-		registerAgeConversions("minecraft:cobblestone_wall", "minecraft:mossy_cobblestone_wall", 10);
-		registerAgeConversions("minecraft:stone_bricks", "minecraft:mossy_stone_bricks", 10);
-		registerAgeConversions("minecraft:stone_brick_slab", "minecraft:mossy_stone_brick_slab", 10);
-		registerAgeConversions("minecraft:stone_brick_stairs", "minecraft:mossy_stone_brick_stairs", 10);
-		registerAgeConversions("minecraft:stone_brick_wall", "minecraft:mossy_stone_brick_wall", 10);
+//		registerAgeConversions("minecraft:cobblestone_slab", "minecraft:mossy_cobblestone_slab", 10);
+//		registerAgeConversions("minecraft:cobblestone_stairs", "minecraft:mossy_cobblestone_stairs", 10);
+//		registerAgeConversions("minecraft:cobblestone_wall", "minecraft:mossy_cobblestone_wall", 10);
+//		registerAgeConversions("minecraft:stone_bricks", "minecraft:mossy_stone_bricks", 10);
+//		registerAgeConversions("minecraft:stone_brick_slab", "minecraft:mossy_stone_brick_slab", 10);
+//		registerAgeConversions("minecraft:stone_brick_stairs", "minecraft:mossy_stone_brick_stairs", 10);
+//		registerAgeConversions("minecraft:stone_brick_wall", "minecraft:mossy_stone_brick_wall", 10);
 		//Create
-		registerAgeConversions("create:granite_bricks", "create:mossy_granite", 10);
-		registerAgeConversions("create:mossy_granite", "create:overgrown_granite", 10);
-		registerAgeConversions("create:diorite_bricks", "create:mossy_diorite", 10);
-		registerAgeConversions("create:mossy_diorite", "create:overgrown_diorite", 10);
-		registerAgeConversions("create:andesite_bricks", "create:mossy_andesite", 10);
-		registerAgeConversions("create:mossy_andesite", "create:overgrown_andesite", 10);
+//		registerAgeConversions("create:granite_bricks", "create:mossy_granite", 10);
+//		registerAgeConversions("create:mossy_granite", "create:overgrown_granite", 10);
+//		registerAgeConversions("create:diorite_bricks", "create:mossy_diorite", 10);
+//		registerAgeConversions("create:mossy_diorite", "create:overgrown_diorite", 10);
+//		registerAgeConversions("create:andesite_bricks", "create:mossy_andesite", 10);
+//		registerAgeConversions("create:mossy_andesite", "create:overgrown_andesite", 10);
 		registerAgeConversions("create:limestone_bricks", "create:mossy_limestone", 10);
 		registerAgeConversions("create:mossy_limestone", "create:overgrown_limestone", 10);
 		registerAgeConversions("create:weathered_limestone_bricks", "create:mossy_weathered_limestone", 10);
@@ -138,8 +137,8 @@ public class Conversions {
 		registerErosionConversions("minecraft:stone_slab", "minecraft:cobblestone_slab", 5, "minecraft:flowing_water");
 		registerErosionConversions("minecraft:stone_stairs", "minecraft:cobblestone_stairs", 5, "minecraft:flowing_water");
 		registerErosionConversions("minecraft:stone_bricks", "minecraft:cracked_stone_bricks", 5, "minecraft:flowing_water");
-		registerErosionConversions("minecraft:polished_blackstone_bricks", "minecraft:cracked_polished_blackstone_bricks", 5, "minecraft:flowing_water");
-		registerErosionConversions("minecraft:nether_bricks", "minecraft:cracked_polished_nether_bricks", 5, "minecraft:flowing_water");
+//		registerErosionConversions("minecraft:polished_blackstone_bricks", "minecraft:cracked_polished_blackstone_bricks", 5, "minecraft:flowing_water");
+//		registerErosionConversions("minecraft:nether_bricks", "minecraft:cracked_polished_nether_bricks", 5, "minecraft:flowing_water");
 		
 		registerErosionConversions("minecraft:light_gray_terracotta", "minecraft:light_gray_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
 		registerErosionConversions("minecraft:black_terracotta", "minecraft:black_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
@@ -157,7 +156,6 @@ public class Conversions {
 		registerErosionConversions("minecraft:gray_terracotta", "minecraft:gray_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
 		registerErosionConversions("minecraft:lime_terracotta", "minecraft:lime_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
 		registerErosionConversions("minecraft:blue_terracotta", "minecraft:blue_glazed_terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
-		registerErosionConversions("minecraft:cobblesone", "minecraft:stone", 4, "minecraft:flowing_lava", "minecraft:lava");
 		registerErosionConversions("minecraft:quartz_block", "minecraft:smooth_quartz", 4, "minecraft:flowing_lava", "minecraft:lava");
 		registerErosionConversions("minecraft:sandstone", "minecraft:smooth_sandstone", 4, "minecraft:flowing_lava", "minecraft:lava");
 		registerErosionConversions("minecraft:wet_sponge", "minecraft:sponge", 4, "minecraft:flowing_lava", "minecraft:lava");
@@ -167,7 +165,7 @@ public class Conversions {
 		registerErosionConversions("minecraft:red_sand", "minecraft:glass", 4, "minecraft:flowing_lava", "minecraft:lava");
 		registerErosionConversions("minecraft:clay", "minecraft:terracotta", 4, "minecraft:flowing_lava", "minecraft:lava");
 		registerErosionConversions("minecraft:red_sandstone", "minecraft:smooth_red_sandstone", 4, "minecraft:flowing_lava", "minecraft:lava");
-		registerErosionConversions("minecraft:polished_blackstone_bricks", "minecraft:cracked_polished_blackstone_bricks", 4, "minecraft:flowing_lava", "minecraft:lava");
-		registerErosionConversions("minecraft:nether_bricks", "minecraft:cracked_polished_nether_bricks", 4, "minecraft:flowing_lava", "minecraft:lava");
+//		registerErosionConversions("minecraft:polished_blackstone_bricks", "minecraft:cracked_polished_blackstone_bricks", 4, "minecraft:flowing_lava", "minecraft:lava");
+//		registerErosionConversions("minecraft:nether_bricks", "minecraft:cracked_polished_nether_bricks", 4, "minecraft:flowing_lava", "minecraft:lava");
 	}
 }

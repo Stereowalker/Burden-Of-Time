@@ -10,6 +10,7 @@ import java.util.concurrent.Executor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.datafixers.util.Pair;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 import com.stereowalker.burdenoftime.conversions.AgeErosionConversion;
 import com.stereowalker.burdenoftime.conversions.Conversion;
@@ -41,7 +42,6 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 						id.getNamespace(),
 						id.getPath().replace("block_conversions/", "").replace(".json", "")
 						);
-
 				if (ForgeRegistries.BLOCKS.containsKey(blockId)) {
 					try {
 						IResource resource = manager.getResource(id);
@@ -52,7 +52,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 							
 							if(object.entrySet().size() != 0) {
 								//Trample
-								if (object.has("trample_conversion") && object.get("trample_conversion").isJsonPrimitive()) {
+								if (object.has("trample_conversion") && object.get("trample_conversion").isJsonObject()) {
 									JsonObject trampleConversion = object.get("trample_conversion").getAsJsonObject();
 									String to = "";
 									float depth = 0;
@@ -66,19 +66,19 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 									
 									if (depth <= 0) {
 										flag = false;
-										BurdenOfTime.getInstance().getLogger().info("The required depth for the trampleConversion conversion of "+blockId+" is less than or equal to zero");
+										BurdenOfTime.getInstance().getLogger().info("The required depth for the trampleConversion conversion of \""+blockId+"\" is less than or equal to zero");
 									}
 									if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
 										flag = false;
-										BurdenOfTime.getInstance().getLogger().info("The conversion block for the age conversion of "+blockId+" does not exist");
+										BurdenOfTime.getInstance().getLogger().info("The conversion block for the age conversion of \""+blockId+"\" does not exist");
 									}
 									if (flag) {
 										conversionMap.add(new TrampleErosionConversion(blockId.toString(), to, depth));
-										BurdenOfTime.getInstance().getLogger().info("Queued trample conversion of "+blockId+" for registration");
+										BurdenOfTime.getInstance().getLogger().info("Queued trample conversion of \""+blockId+"\" for registration");
 									}
 								}
 								//Age
-								if (object.has("age_conversion") && object.get("age_conversion").isJsonPrimitive()) {
+								if (object.has("age_conversion") && object.get("age_conversion").isJsonObject()) {
 									JsonObject ageConversion = object.get("age_conversion").getAsJsonObject();
 									String to = "";
 									int age = 0;
@@ -92,66 +92,77 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 									
 									if (age <= 0) {
 										flag = false;
-										BurdenOfTime.getInstance().getLogger().info("The required age for the age conversion of "+blockId+" is less than or equal to zero");
+										BurdenOfTime.getInstance().getLogger().info("The required age for the age conversion of \""+blockId+"\" is less than or equal to zero");
 									}
 									if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
 										flag = false;
-										BurdenOfTime.getInstance().getLogger().info("The conversion block for the age conversion of "+blockId+" does not exist");
+										BurdenOfTime.getInstance().getLogger().info("The conversion block for the age conversion of \""+blockId+"\" does not exist");
 									}
 									if (flag) {
 										conversionMap.add(new AgeErosionConversion(blockId.toString(), to, age));
-										BurdenOfTime.getInstance().getLogger().info("Queued age conversion of "+blockId+" for registration");
+										BurdenOfTime.getInstance().getLogger().info("Queued age conversion of \""+blockId+"\" for registration");
 									}
 								}
 								//Fluid
-								if (object.has("fluid_conversion") && object.get("fluid_conversion").isJsonPrimitive()) {
+								if (object.has("fluid_conversion") && object.get("fluid_conversion").isJsonObject()) {
 									JsonObject fluidConversion = object.get("fluid_conversion").getAsJsonObject();
 									String to = "";
-									List<String> fluids = new ArrayList<>();
-									int age = 0;
+									List<Pair<String, Integer>> fluids = new ArrayList<>();
 									boolean flag = true;
 									if (fluidConversion.has("to") && fluidConversion.get("to").isJsonPrimitive()) {
 										to = fluidConversion.get("to").getAsString();
 									} else flag = false;
 									if (fluidConversion.has("fluids") && fluidConversion.get("fluids").isJsonArray()) {
-										for (JsonElement elem : object.get("fluids").getAsJsonArray()) {
-											if (elem.isJsonPrimitive()) {
-												fluids.add(elem.getAsString());
+										for (JsonElement elem : fluidConversion.get("fluids").getAsJsonArray()) {
+											boolean flag2 = true;
+											if (elem.getAsJsonObject().has("id") && elem.getAsJsonObject().get("id").isJsonPrimitive()) {
+												BurdenOfTime.getInstance().getLogger().info("BOONE ID");
+												if (elem.getAsJsonObject().has("age") && elem.getAsJsonObject().get("age").isJsonPrimitive()) {
+													BurdenOfTime.getInstance().getLogger().info("BOONE AGE");
+												} else {
+													BurdenOfTime.getInstance().getLogger().info("The required age for the fluid conversion of \""+blockId+"\" with \""+elem.getAsJsonObject().get("id").getAsString()+"\"is undefined");
+													flag2 = false;
+												}
+											} else {
+												BurdenOfTime.getInstance().getLogger().info("The fluid for the fluid conversion of \""+blockId+"\" was not defined");
+												flag2 = false;
+											}
+											if (elem.isJsonObject() && flag2) {
+												fluids.add(Pair.of(elem.getAsJsonObject().get("id").getAsString(), elem.getAsJsonObject().get("age").getAsInt()));
 											}
 										}
-									} else flag = false;
-									if (fluidConversion.has("age") && fluidConversion.get("age").isJsonPrimitive()) {
-										age = fluidConversion.get("age").getAsInt();
+										//BurdenOfTime.getInstance().getLogger().info("FDDDDDEESS "+ i);
 									} else flag = false;
 									
-									if (age <= 0) {
-										flag = false;
-										BurdenOfTime.getInstance().getLogger().info("The required age for the fluid conversion of "+blockId+" is less than or equal to zero");
-									}
+									
 									if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
 										flag = false;
-										BurdenOfTime.getInstance().getLogger().info("The conversion block for the fluid conversion of "+blockId+" does not exist");
+										BurdenOfTime.getInstance().getLogger().info("The conversion block for the fluid conversion of \""+blockId+"\" does not exist");
 									}
-									for (String fluid : fluids) {
-										if (!ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(fluid))) {
+									for (Pair<String, Integer> fluid : fluids) {
+										if (!ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(fluid.getFirst()))) {
 											flag = false;
-											BurdenOfTime.getInstance().getLogger().info("One of the required fluids for the fluid conversion of "+blockId+" does not exist");
+											BurdenOfTime.getInstance().getLogger().info("The \""+fluid.getFirst()+"\" fluid for the fluid conversion of \""+blockId+"\" does not exist");
+										}
+										if (fluid.getSecond() <= 0) {
+											flag = false;
+											BurdenOfTime.getInstance().getLogger().info("The required age for the fluid conversion of \""+blockId+"\" with \""+fluid.getFirst()+"\"is less than or equal to zero");
 										}
 									}
 									if (flag) {
-										for (String fluid : fluids) {
-											conversionMap.add(new FluidErosionConversion(blockId.toString(), to, age, fluid));
+										for (Pair<String, Integer> fluid : fluids) {
+											conversionMap.add(new FluidErosionConversion(blockId.toString(), to, fluid.getSecond(), fluid.getFirst()));
 										}
-										BurdenOfTime.getInstance().getLogger().info("Queued fluid conversion of "+blockId+" for registration");
+										BurdenOfTime.getInstance().getLogger().info("Queued fluid conversion of \""+blockId+"\" for registration");
 									}
 								}
 							}
 						}
 					} catch (Exception e) {
-						BurdenOfTime.getInstance().getLogger().warn("Error reading the block conversion " + blockId + "!", e);
+						BurdenOfTime.getInstance().getLogger().warn("Error reading the block conversion \""+blockId+"\" !", e);
 					}
 				} else {
-					BurdenOfTime.getInstance().getLogger().warn("No such block exists with the id " + blockId + "!");
+					BurdenOfTime.getInstance().getLogger().warn("No such block exists with the id  \""+blockId+"\" !");
 				}
 			}
 

@@ -2,6 +2,7 @@ package com.stereowalker.burdenoftime;
 
 import com.stereowalker.burdenoftime.config.Config;
 import com.stereowalker.burdenoftime.conversions.Conversions;
+import com.stereowalker.burdenoftime.resource.ConversionDataManager;
 import com.stereowalker.unionlib.client.gui.screen.ConfigScreen;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.UnionMod;
@@ -12,15 +13,20 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(value = "burdenoftime")
 public class BurdenOfTime extends UnionMod {
-
+	public static ConversionDataManager data = new ConversionDataManager();
+	
+	
 	private static BurdenOfTime instance;
 	
 	public BurdenOfTime() {
@@ -50,6 +56,14 @@ public class BurdenOfTime extends UnionMod {
 
 	public static BurdenOfTime getInstance() {
 		return instance;
+	}
+	
+	@EventBusSubscriber
+	public static class E {
+		@SubscribeEvent
+		public static void eve(AddReloadListenerEvent event) {
+			event.addListener(data);
+		}
 	}
 
 }

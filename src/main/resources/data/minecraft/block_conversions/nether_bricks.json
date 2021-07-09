@@ -1,0 +1,19 @@
+{
+	"fluid_conversion": {
+		"to": "minecraft:cracked_polished_nether_bricks",
+		"fluids": [
+			{
+				"id": "minecraft:flowing_lava",
+				"age": 4 
+			},
+			{
+				"id": "minecraft:lava",
+				"age": 4 
+			},
+			{
+				"id": "minecraft:flowing_water",
+				"age": 5
+			}
+		]
+	}
+}

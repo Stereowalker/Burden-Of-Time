@@ -1,0 +1,19 @@
+{
+	"age_conversion": {
+		"to": "minecraft:mossy_cobblestone_stairs",
+		"age": 10
+	},
+	"fluid_conversion": {
+		"to": "minecraft:stone_stairs",
+		"fluids": [
+			{
+				"id": "minecraft:flowing_lava",
+				"age": 4 
+			},
+			{
+				"id": "minecraft:lava",
+				"age": 4 
+			}
+		]
+	}
+}
