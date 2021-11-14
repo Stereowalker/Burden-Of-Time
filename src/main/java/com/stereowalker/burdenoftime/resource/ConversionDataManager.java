@@ -19,10 +19,10 @@ import com.stereowalker.burdenoftime.conversions.FluidErosionConversion;
 import com.stereowalker.burdenoftime.conversions.TrampleErosionConversion;
 import com.stereowalker.unionlib.resource.IResourceReloadListener;
 
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResource;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
@@ -33,18 +33,18 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 	private static final JsonParser parser = new JsonParser();
 
 	@Override
-	public CompletableFuture<List<Conversion>> load(IResourceManager manager, IProfiler profiler, Executor executor) {
+	public CompletableFuture<List<Conversion>> load(ResourceManager manager, ProfilerFiller profiler, Executor executor) {
 		return CompletableFuture.supplyAsync(() -> {
 			List<Conversion> conversionMap = new ArrayList<>();
 
-			for (ResourceLocation id : manager.getAllResourceLocations("block_conversions", (s) -> s.endsWith(".json"))) {
+			for (ResourceLocation id : manager.listResources("block_conversions", (s) -> s.endsWith(".json"))) {
 				ResourceLocation blockId = new ResourceLocation(
 						id.getNamespace(),
 						id.getPath().replace("block_conversions/", "").replace(".json", "")
 						);
 				if (ForgeRegistries.BLOCKS.containsKey(blockId)) {
 					try {
-						IResource resource = manager.getResource(id);
+						Resource resource = manager.getResource(id);
 						try (InputStream stream = resource.getInputStream(); 
 								InputStreamReader reader = new InputStreamReader(stream)) {
 							
@@ -171,7 +171,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 	}
 
 	@Override
-	public CompletableFuture<Void> apply(List<Conversion> data, IResourceManager manager, IProfiler profiler, Executor executor) {
+	public CompletableFuture<Void> apply(List<Conversion> data, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
 		return CompletableFuture.runAsync(() -> {
 			for (Conversion conversion : data) {
 				if (conversion instanceof TrampleErosionConversion) {

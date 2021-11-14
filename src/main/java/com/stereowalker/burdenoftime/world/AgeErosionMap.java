@@ -6,15 +6,15 @@ import java.util.Objects;
 import com.google.gson.Gson;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 
-public class AgeErosionMap extends WorldSavedData
+public class AgeErosionMap extends SavedData
 {
     public static final String KEY = BurdenOfTime.getInstance().getModid() + "age_map";
 
@@ -23,12 +23,12 @@ public class AgeErosionMap extends WorldSavedData
 
     private AgeErosionMap()
     {
-        super(KEY);
+        super(/*KEY*/);
         gson = new Gson();
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag)
+    public CompoundTag save(CompoundTag tag)
     {
         for (BlockPos entry : ageMap.keySet())
         {
@@ -38,24 +38,25 @@ public class AgeErosionMap extends WorldSavedData
         return tag;
     }
 
-    @Override
-    public void read(CompoundNBT tag)
+    public static AgeErosionMap read(CompoundTag tag)
     {
-        ageMap.clear();
+    	AgeErosionMap map = new AgeErosionMap();
+        map.ageMap.clear();
 
-        for (String entry : tag.keySet())
+        for (String entry : tag.getAllKeys())
         {
             int age = tag.getInt(entry);
-            BlockPos pos = gson.fromJson(entry, BlockPos.class);
+            BlockPos pos = map.gson.fromJson(entry, BlockPos.class);
 
-            ageMap.put(pos, age);
+            map.ageMap.put(pos, age);
         }
+        return map;
 
     }
 
-    public static AgeErosionMap getInstance(MinecraftServer server, RegistryKey<World> dimension)
+    public static AgeErosionMap getInstance(MinecraftServer server, ResourceKey<Level> dimension)
     {
-    	DimensionSavedDataManager manager = Objects.requireNonNull(server.getWorld(dimension)).getSavedData();
-        return manager.getOrCreate(AgeErosionMap::new, KEY);
+    	DimensionDataStorage manager = Objects.requireNonNull(server.getLevel(dimension)).getDataStorage();
+        return manager.computeIfAbsent(AgeErosionMap::read, AgeErosionMap::new, KEY);
     }
 }

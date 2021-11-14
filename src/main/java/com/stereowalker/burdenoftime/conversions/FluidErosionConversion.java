@@ -1,9 +1,9 @@
 package com.stereowalker.burdenoftime.conversions;
 
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ResourceLocationException;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidErosionConversion extends Conversion
@@ -22,11 +22,11 @@ public class FluidErosionConversion extends Conversion
     {
     	super(from, to);
         this.requiredAge = requiredAge;
-        ResourceLocation requiredFluidL = ResourceLocation.tryCreate(requiredFluid);
+        ResourceLocation requiredFluidL = ResourceLocation.tryParse(requiredFluid);
 
         if (requiredFluidL == null)
             throw new ResourceLocationException("An invalid fluid has been detected: {" + requiredFluid + "}");
 
-        this.requiredFluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(requiredFluid));
+        this.requiredFluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(requiredFluid));
     }
 }

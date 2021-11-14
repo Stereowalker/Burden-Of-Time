@@ -3,14 +3,14 @@ package com.stereowalker.burdenoftime;
 import com.stereowalker.burdenoftime.config.Config;
 import com.stereowalker.burdenoftime.conversions.Conversions;
 import com.stereowalker.burdenoftime.resource.ConversionDataManager;
-import com.stereowalker.unionlib.client.gui.screen.ConfigScreen;
+import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.config.ConfigBuilder;
-import com.stereowalker.unionlib.mod.UnionMod;
+import com.stereowalker.unionlib.mod.MinecraftMod;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -23,7 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(value = "burdenoftime")
-public class BurdenOfTime extends UnionMod {
+public class BurdenOfTime extends MinecraftMod {
 	public static ConversionDataManager data = new ConversionDataManager();
 	
 	
@@ -51,7 +51,7 @@ public class BurdenOfTime extends UnionMod {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
-		return new ConfigScreen(previousScreen, Config.class, new TranslationTextComponent("burdenoftime.gui.config"));
+		return new ConfigScreen(previousScreen, Config.class, new TranslatableComponent("burdenoftime.gui.config"));
 	}
 
 	public static BurdenOfTime getInstance() {

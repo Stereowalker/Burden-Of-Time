@@ -12,41 +12,41 @@ import com.stereowalker.burdenoftime.world.AgeErosionMap;
 import com.stereowalker.burdenoftime.world.FluidErosionMap;
 import com.stereowalker.burdenoftime.world.TrampleErosionMap;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-@Mixin(World.class)
+@Mixin(Level.class)
 public abstract class WorldMixin
 {
     @Shadow
-    public abstract boolean isRemote();
+    public abstract boolean isClientSide();
 
     @Shadow
     public abstract @Nullable MinecraftServer getServer();
 
-    @Shadow public abstract RegistryKey<World> getDimensionKey();
+    @Shadow public abstract ResourceKey<Level> dimension();
 
-    @Inject(at = @At("RETURN"), method = "setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;II)Z")
+    @Inject(at = @At("RETURN"), method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z")
     public void setBlockState(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> cir)
     {
-        if (cir.getReturnValue() && !isRemote())
+        if (cir.getReturnValue() && !isClientSide())
         {
             MinecraftServer server = getServer();
             if (server == null)
                 return;
 
-            TrampleErosionMap depthMapState = TrampleErosionMap.getInstance(server, getDimensionKey());
+            TrampleErosionMap depthMapState = TrampleErosionMap.getInstance(server, dimension());
             depthMapState.erosionMap.remove(pos);
             depthMapState.setDirty(true);
             
-            AgeErosionMap ageMapState = AgeErosionMap.getInstance(server, getDimensionKey());
+            AgeErosionMap ageMapState = AgeErosionMap.getInstance(server, dimension());
             ageMapState.ageMap.remove(pos);
             ageMapState.setDirty(true);
             
-            FluidErosionMap fluidMapState = FluidErosionMap.getInstance(server, getDimensionKey());
+            FluidErosionMap fluidMapState = FluidErosionMap.getInstance(server, dimension());
             fluidMapState.wearMap.remove(pos);
             fluidMapState.setDirty(true);
         }

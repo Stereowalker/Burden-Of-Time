@@ -6,18 +6,18 @@ import java.util.Objects;
 import com.google.gson.Gson;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class FluidErosionMap extends WorldSavedData
+public class FluidErosionMap extends SavedData
 {
     public static final String KEY = BurdenOfTime.getInstance().getModid() + "fluid_map";
 
@@ -26,12 +26,12 @@ public class FluidErosionMap extends WorldSavedData
 
     private FluidErosionMap()
     {
-        super(KEY);
+        super(/*KEY*/);
         gson = new Gson();
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag)
+    public CompoundTag save(CompoundTag tag)
     {
         for (BlockPos entry : wearMap.keySet())
         {
@@ -45,27 +45,27 @@ public class FluidErosionMap extends WorldSavedData
         return tag;
     }
 
-    @Override
-    public void read(CompoundNBT tag)
+    public static FluidErosionMap read(CompoundTag tag)
     {
-    	wearMap.clear();
+    	FluidErosionMap map = new FluidErosionMap();
+    	map.wearMap.clear();
 
-        for (String entry : tag.keySet())
+        for (String entry : tag.getAllKeys())
         {
         	String[] entries = entry.split("#");
             int age = tag.getInt(entry);
-            BlockPos pos = gson.fromJson(entries[0], BlockPos.class);
+            BlockPos pos = map.gson.fromJson(entries[0], BlockPos.class);
 
-            HashMap<Fluid, Integer> fluidMap = wearMap.getOrDefault(entries[0], new HashMap<>());
+            HashMap<Fluid, Integer> fluidMap = map.wearMap.getOrDefault(entries[0], new HashMap<>());
             fluidMap.put(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(entries[1])), age);
-            wearMap.put(pos, fluidMap);
+            map.wearMap.put(pos, fluidMap);
         }
-
+        return map;
     }
 
-    public static FluidErosionMap getInstance(MinecraftServer server, RegistryKey<World> dimension)
+    public static FluidErosionMap getInstance(MinecraftServer server, ResourceKey<Level> dimension)
     {
-    	DimensionSavedDataManager manager = Objects.requireNonNull(server.getWorld(dimension)).getSavedData();
-        return manager.getOrCreate(FluidErosionMap::new, KEY);
+    	DimensionDataStorage manager = Objects.requireNonNull(server.getLevel(dimension)).getDataStorage();
+        return manager.computeIfAbsent(FluidErosionMap::read, FluidErosionMap::new, KEY);
     }
 }

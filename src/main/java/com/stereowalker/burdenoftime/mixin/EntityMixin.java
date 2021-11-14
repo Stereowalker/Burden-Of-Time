@@ -14,29 +14,29 @@ import com.stereowalker.burdenoftime.conversions.Conversions;
 import com.stereowalker.burdenoftime.conversions.TrampleErosionConversion;
 import com.stereowalker.burdenoftime.world.TrampleErosionMap;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin
 {
-	@Shadow public float prevDistanceWalkedModified;
-	@Shadow public float distanceWalkedModified;
-	@Shadow @Final protected Random rand;
+	@Shadow public float walkDistO;
+	@Shadow public float walkDist;
+	@Shadow @Final protected Random random;
 
-	@Shadow public abstract boolean isSneaking();
+	@Shadow public abstract boolean isShiftKeyDown();
 
-	@Shadow protected abstract BlockPos getOnPosition();
+	@Shadow protected abstract BlockPos getOnPos();
 
-	@Shadow public World world;
+	@Shadow public Level level;
 
 	@Shadow public abstract boolean isOnGround();
 
-	@Shadow public abstract Vector3d getMotion();
+	@Shadow public abstract Vec3 getDeltaMovement();
 
 	@Shadow
 	public abstract boolean isSwimming();
@@ -44,28 +44,28 @@ public abstract class EntityMixin
 	@Inject(at = @At("HEAD"), method = "tick")
 	private void tick(CallbackInfo info)
 	{
-		if (world.isRemote())
+		if (level.isClientSide())
 			return;
 
-		if (isSwimming() || !isOnGround() || !Conversions.tickable_blocks.contains(world.getBlockState(getOnPosition()).getBlock())) return;
+		if (isSwimming() || !isOnGround() || !Conversions.tickable_blocks.contains(level.getBlockState(getOnPos()).getBlock())) return;
 
-		double speed = Math.abs(prevDistanceWalkedModified - distanceWalkedModified);
+		double speed = Math.abs(walkDistO - walkDist);
 
 		DegradeGround((float) speed);
 	}
 
 	private void DegradeGround(float intensity)
 	{
-		MinecraftServer server = world.getServer();
+		MinecraftServer server = level.getServer();
 		if (server == null)
 			return;
 
-		if (Config.chanceForGroundToErode < rand.nextInt(1000) || intensity < 0.01 || (isSneaking() && Config.sneakPreventsTrail))
+		if (Config.chanceForGroundToErode < random.nextInt(1000) || intensity < 0.01 || (isShiftKeyDown() && Config.sneakPreventsTrail))
 			return;
 
-		TrampleErosionMap depthMapState = TrampleErosionMap.getInstance(server, world.getDimensionKey());
-		BlockPos pos = getOnPosition();
-		BlockState state = world.getBlockState(pos);
+		TrampleErosionMap depthMapState = TrampleErosionMap.getInstance(server, level.dimension());
+		BlockPos pos = getOnPos();
+		BlockState state = level.getBlockState(pos);
 
 		float currentDepth = depthMapState.erosionMap.getOrDefault(pos, 0f) + intensity;
 		depthMapState.erosionMap.put(pos, currentDepth);
@@ -76,7 +76,7 @@ public abstract class EntityMixin
 
 		for (TrampleErosionConversion conversion : Conversions.trample_conversions)
 		{
-			conversion.handleConversion(world, pos, state, currentDepth, conversion.requiredDepth);
+			conversion.handleConversion(level, pos, state, currentDepth, conversion.requiredDepth);
 		}
 	}
 }

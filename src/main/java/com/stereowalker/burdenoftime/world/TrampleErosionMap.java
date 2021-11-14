@@ -6,15 +6,15 @@ import java.util.Objects;
 import com.google.gson.Gson;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 
-public class TrampleErosionMap extends WorldSavedData
+public class TrampleErosionMap extends SavedData
 {
     public static final String KEY = BurdenOfTime.getInstance().getModid() + "erosion_map";
 
@@ -23,12 +23,12 @@ public class TrampleErosionMap extends WorldSavedData
 
     private TrampleErosionMap()
     {
-        super(KEY);
+        super(/*KEY*/);
         gson = new Gson();
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag)
+    public CompoundTag save(CompoundTag tag)
     {
         for (BlockPos entry : erosionMap.keySet())
         {
@@ -38,24 +38,24 @@ public class TrampleErosionMap extends WorldSavedData
         return tag;
     }
 
-    @Override
-    public void read(CompoundNBT tag)
+    public static TrampleErosionMap read(CompoundTag tag)
     {
-        erosionMap.clear();
+    	TrampleErosionMap map = new TrampleErosionMap();
+        map.erosionMap.clear();
 
-        for (String entry : tag.keySet())
+        for (String entry : tag.getAllKeys())
         {
             float depth = tag.getFloat(entry);
-            BlockPos pos = gson.fromJson(entry, BlockPos.class);
+            BlockPos pos = map.gson.fromJson(entry, BlockPos.class);
 
-            erosionMap.put(pos, depth);
+            map.erosionMap.put(pos, depth);
         }
-
+        return map;
     }
 
-    public static TrampleErosionMap getInstance(MinecraftServer server, RegistryKey<World> dimension)
+    public static TrampleErosionMap getInstance(MinecraftServer server, ResourceKey<Level> dimension)
     {
-    	DimensionSavedDataManager manager = Objects.requireNonNull(server.getWorld(dimension)).getSavedData();
-        return manager.getOrCreate(TrampleErosionMap::new, KEY);
+    	DimensionDataStorage manager = Objects.requireNonNull(server.getLevel(dimension)).getDataStorage();
+        return manager.computeIfAbsent(TrampleErosionMap::read, TrampleErosionMap::new, KEY);
     }
 }

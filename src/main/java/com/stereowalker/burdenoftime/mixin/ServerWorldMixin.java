@@ -17,32 +17,32 @@ import com.stereowalker.burdenoftime.conversions.FluidErosionConversion;
 import com.stereowalker.burdenoftime.world.AgeErosionMap;
 import com.stereowalker.burdenoftime.world.FluidErosionMap;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.profiler.IProfiler;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.material.Fluid;
 
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 public abstract class ServerWorldMixin
 {
 	@Shadow
-	public abstract ServerWorld getWorld();
+	public abstract ServerLevel getLevel();
 
-	@Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/chunk/ChunkSection;getBlockState(III)Lnet/minecraft/block/BlockState;", ordinal = 0), method = "tickEnvironment(Lnet/minecraft/world/chunk/Chunk;I)V", locals = LocalCapture.CAPTURE_FAILHARD)
-	public void tickEnvironment(Chunk chunkIn, int randomTickSpeed, CallbackInfo ci, ChunkPos chunkpos, boolean flag, int i, int j, IProfiler iprofiler, ChunkSection var8[], int var9, int var10, ChunkSection chunksection, int k, int l, BlockPos blockpos1, BlockState blockstate)
+	@Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getBlockState(III)Lnet/minecraft/world/level/block/state/BlockState;", ordinal = 0), method = "tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V", locals = LocalCapture.CAPTURE_FAILHARD)
+	public void tickEnvironment(LevelChunk chunkIn, int randomTickSpeed, CallbackInfo ci, ChunkPos chunkpos, boolean flag, int i, int j, ProfilerFiller iprofiler, LevelChunkSection var8[], int var9, int var10, LevelChunkSection chunksection, int k, int l, BlockPos blockpos1, BlockState blockstate)
 	{
 		if (Conversions.tickable_blocks.contains(blockstate.getBlock())) {			
-			ageBlock(getWorld(), blockstate, new Random(), blockpos1);
-			erodeBlock(getWorld(), blockstate, new Random(), blockpos1);
+			ageBlock(getLevel(), blockstate, new Random(), blockpos1);
+			erodeBlock(getLevel(), blockstate, new Random(), blockpos1);
 		}
 	}
 
-	private void ageBlock(ServerWorld world, BlockState blockstate, Random rand, BlockPos pos)
+	private void ageBlock(ServerLevel world, BlockState blockstate, Random rand, BlockPos pos)
 	{
 		MinecraftServer server = world.getServer();
 		if (server == null)
@@ -51,7 +51,7 @@ public abstract class ServerWorldMixin
 		if (Config.chanceForBlockToAge < rand.nextInt(1000))
 			return;
 
-		AgeErosionMap ageMapState = AgeErosionMap.getInstance(server, world.getDimensionKey());
+		AgeErosionMap ageMapState = AgeErosionMap.getInstance(server, world.dimension());
 
 		int currentAge = ageMapState.ageMap.getOrDefault(pos, 0) + 1;
 		ageMapState.ageMap.put(pos, currentAge);
@@ -64,13 +64,13 @@ public abstract class ServerWorldMixin
 		}
 	}
 
-	private void erodeBlock(ServerWorld world, BlockState blockstate, Random rand, BlockPos pos)
+	private void erodeBlock(ServerLevel world, BlockState blockstate, Random rand, BlockPos pos)
 	{
 		MinecraftServer server = world.getServer();
 		if (server == null)
 			return;
 		
-		if (world.getFluidState(pos.up()).isEmpty()
+		if (world.getFluidState(pos.above()).isEmpty()
 				&& world.getFluidState(pos.north()).isEmpty()
 				&& world.getFluidState(pos.south()).isEmpty()
 				&& world.getFluidState(pos.west()).isEmpty()
@@ -83,13 +83,13 @@ public abstract class ServerWorldMixin
 
 		for (FluidErosionConversion conversion : Conversions.fluid_conversions)
 		{
-			if (world.getFluidState(pos.up()).getFluid() == conversion.requiredFluid 
-					|| world.getFluidState(pos.north()).getFluid() == conversion.requiredFluid
-					|| world.getFluidState(pos.south()).getFluid() == conversion.requiredFluid
-					|| world.getFluidState(pos.west()).getFluid() == conversion.requiredFluid
-					|| world.getFluidState(pos.east()).getFluid() == conversion.requiredFluid) {
+			if (world.getFluidState(pos.above()).getType() == conversion.requiredFluid 
+					|| world.getFluidState(pos.north()).getType() == conversion.requiredFluid
+					|| world.getFluidState(pos.south()).getType() == conversion.requiredFluid
+					|| world.getFluidState(pos.west()).getType() == conversion.requiredFluid
+					|| world.getFluidState(pos.east()).getType() == conversion.requiredFluid) {
 
-				FluidErosionMap ageMapState = FluidErosionMap.getInstance(server, world.getDimensionKey());
+				FluidErosionMap ageMapState = FluidErosionMap.getInstance(server, world.dimension());
 
 				HashMap<Fluid, Integer> wearAge = ageMapState.wearMap.getOrDefault(pos, new HashMap<>());
 				int currentAge = wearAge.getOrDefault(conversion.requiredFluid, 0) + 10;
