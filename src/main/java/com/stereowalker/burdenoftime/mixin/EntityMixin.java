@@ -47,7 +47,7 @@ public abstract class EntityMixin
 		if (level.isClientSide())
 			return;
 
-		if (isSwimming() || !isOnGround() || !Conversions.tickable_blocks.contains(level.getBlockState(getOnPos()).getBlock())) return;
+		if (isSwimming() || !isOnGround() || !Conversions.trample_conversions.containsKey(level.getBlockState(getOnPos()).getBlock().getRegistryName())) return;
 
 		double speed = Math.abs(walkDistO - walkDist);
 
@@ -73,10 +73,8 @@ public abstract class EntityMixin
 		currentDepth *= Config.trailSofteningModifier;
 
 		depthMapState.setDirty(true);
-
-		for (TrampleErosionConversion conversion : Conversions.trample_conversions)
-		{
-			conversion.handleConversion(level, pos, state, currentDepth, conversion.requiredDepth);
-		}
+		
+		TrampleErosionConversion conversion = Conversions.trample_conversions.get(state.getBlock().getRegistryName());
+		conversion.handleConversion(level, pos, state, currentDepth, conversion.requiredDepth);
 	}
 }

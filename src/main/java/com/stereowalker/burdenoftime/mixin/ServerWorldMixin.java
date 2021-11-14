@@ -1,6 +1,7 @@
 package com.stereowalker.burdenoftime.mixin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,9 +37,11 @@ public abstract class ServerWorldMixin
 	@Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getBlockState(III)Lnet/minecraft/world/level/block/state/BlockState;", ordinal = 0), method = "tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V", locals = LocalCapture.CAPTURE_FAILHARD)
 	public void tickEnvironment(LevelChunk chunkIn, int randomTickSpeed, CallbackInfo ci, ChunkPos chunkpos, boolean flag, int i, int j, ProfilerFiller iprofiler, LevelChunkSection var8[], int var9, int var10, LevelChunkSection chunksection, int k, int l, BlockPos blockpos1, BlockState blockstate)
 	{
-		if (Conversions.tickable_blocks.contains(blockstate.getBlock())) {			
-			ageBlock(getLevel(), blockstate, new Random(), blockpos1);
+		if (Conversions.fluid_conversions.containsKey(blockstate.getBlock().getRegistryName())) {			
 			erodeBlock(getLevel(), blockstate, new Random(), blockpos1);
+		}
+		if (Conversions.ageing_conversions.containsKey(blockstate.getBlock().getRegistryName())) {			
+			ageBlock(getLevel(), blockstate, new Random(), blockpos1);
 		}
 	}
 
@@ -57,11 +60,9 @@ public abstract class ServerWorldMixin
 		ageMapState.ageMap.put(pos, currentAge);
 
 		ageMapState.setDirty(true);
-
-		for (AgeErosionConversion conversion : Conversions.ageing_conversions)
-		{
-			conversion.handleConversion(world, pos, blockstate, currentAge, conversion.requiredAge);
-		}
+		
+		AgeErosionConversion conversion = Conversions.ageing_conversions.get(blockstate.getBlock().getRegistryName());
+		conversion.handleConversion(world, pos, blockstate, currentAge, conversion.requiredAge);
 	}
 
 	private void erodeBlock(ServerLevel world, BlockState blockstate, Random rand, BlockPos pos)
@@ -81,7 +82,8 @@ public abstract class ServerWorldMixin
 			return;
 
 
-		for (FluidErosionConversion conversion : Conversions.fluid_conversions)
+		List<FluidErosionConversion> fluidList = Conversions.fluid_conversions.get(blockstate.getBlock().getRegistryName());
+		for (FluidErosionConversion conversion : fluidList)
 		{
 			if (world.getFluidState(pos.above()).getType() == conversion.requiredFluid 
 					|| world.getFluidState(pos.north()).getType() == conversion.requiredFluid

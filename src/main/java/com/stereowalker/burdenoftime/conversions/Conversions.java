@@ -1,29 +1,21 @@
 package com.stereowalker.burdenoftime.conversions;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class Conversions {
-	public static List<Block> tickable_blocks = Lists.newArrayList();
-	public static List<TrampleErosionConversion> trample_conversions = Lists.newArrayList();
+	public static Map<ResourceLocation, TrampleErosionConversion> trample_conversions = Maps.newHashMap();
 	
 	public static void registerTrampleConversions(String from, String to, float requiredDepth) {
 		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
-			for (TrampleErosionConversion conversion : trample_conversions) {
-				if (conversion.from.getRegistryName().equals(new ResourceLocation(from))) {
-					trample_conversions.remove(conversion);
-					break;
-				}
-			}
-			trample_conversions.add(new TrampleErosionConversion(from, to, requiredDepth));
-			if (!tickable_blocks.contains(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from))))
-				tickable_blocks.add(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from)));
+			trample_conversions.put(new ResourceLocation(from), new TrampleErosionConversion(from, to, requiredDepth));
 		} else {
 			String message = "";
 			boolean flag = false;
@@ -40,19 +32,11 @@ public class Conversions {
 		}
 	}
 
-	public static List<AgeErosionConversion> ageing_conversions = Lists.newArrayList();
+	public static Map<ResourceLocation, AgeErosionConversion> ageing_conversions = Maps.newHashMap();
 
 	public static void registerAgeConversions(String from, String to, int requiredAge) {
 		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
-			for (AgeErosionConversion conversion : ageing_conversions) {
-				if (conversion.from.getRegistryName().equals(new ResourceLocation(from))) {
-					ageing_conversions.remove(conversion);
-					break;
-				}
-			}
-			ageing_conversions.add(new AgeErosionConversion(from, to, requiredAge));
-			if (!tickable_blocks.contains(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from))))
-				tickable_blocks.add(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from)));
+			ageing_conversions.put(new ResourceLocation(from), new AgeErosionConversion(from, to, requiredAge));
 		} else {
 			String message = "";
 			boolean flag = false;
@@ -69,23 +53,17 @@ public class Conversions {
 		}
 	}
 
-	public static List<FluidErosionConversion> fluid_conversions = Lists.newArrayList();
+	public static Map<ResourceLocation, List<FluidErosionConversion>> fluid_conversions = Maps.newHashMap();
 
 	public static void registerErosionConversions(String from, String to, int requiredAge, String... requiredFluids) {
 		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+			List<FluidErosionConversion> list = Lists.newArrayList();
 			for (String requiredFluid : requiredFluids) {
 				if (ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(requiredFluid))) {
-					for (FluidErosionConversion conversion : fluid_conversions) {
-						if (conversion.from.getRegistryName().equals(new ResourceLocation(from)) && conversion.requiredFluid.getRegistryName().equals(new ResourceLocation(requiredFluid))) {
-							fluid_conversions.remove(conversion);
-							break;
-						}
-					}
-					fluid_conversions.add(new FluidErosionConversion(from, to, requiredAge, requiredFluid));
-					if (!tickable_blocks.contains(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from))))
-						tickable_blocks.add(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(from)));
+					list.add(new FluidErosionConversion(from, to, requiredAge, requiredFluid));
 				}
 			}
+			fluid_conversions.put(new ResourceLocation(from), list);
 		} else {
 			String message = "";
 			boolean flag = false;
