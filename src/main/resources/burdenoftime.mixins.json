@@ -2,7 +2,7 @@
   "required": true,
   "package": "com.stereowalker.burdenoftime.mixin",
   "refmap": "burdenoftime.refmap.json",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "EntityMixin",
     "WorldMixin",

@@ -1,6 +1,6 @@
 
 modLoader="javafml"
-loaderVersion="[37,)"
+loaderVersion="[39,)"
 license="Creative Commons Attribution-NonCommercial-NoDerivatives 4.0"
 issueTrackerURL="https://github.com/Stereowalker/Burden-Of-Time/issues"
 logoFile="pack.png"
@@ -22,7 +22,7 @@ Burden Of Time is a mod that allows your world to age without input from the pla
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[37,)" #mandatory
+    versionRange="[39,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -31,14 +31,14 @@ Burden Of Time is a mod that allows your world to age without input from the pla
 [[dependencies.burdenoftime]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1,1.18]"
+    versionRange="[1.18.1,1.19)"
     ordering="NONE"
     side="BOTH"
 	
 [[dependencies.burdenoftime]]
     modId="unionlib"
     mandatory=true
-    versionRange="[4.1.0, 4.2.0]"
+    versionRange="[6.1.7, 6.2.0]"
     ordering="NONE"
     side="BOTH"
 
