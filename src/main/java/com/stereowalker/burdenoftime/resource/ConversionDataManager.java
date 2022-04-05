@@ -30,8 +30,6 @@ import net.minecraftforge.registries.ForgeRegistries;
  * @author Stereowalker
  */
 public class ConversionDataManager implements IResourceReloadListener<List<Conversion>> {
-	private static final JsonParser parser = new JsonParser();
-
 	@Override
 	public CompletableFuture<List<Conversion>> load(ResourceManager manager, ProfilerFiller profiler, Executor executor) {
 		return CompletableFuture.supplyAsync(() -> {
@@ -48,7 +46,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 						try (InputStream stream = resource.getInputStream(); 
 								InputStreamReader reader = new InputStreamReader(stream)) {
 							
-							JsonObject object = parser.parse(reader).getAsJsonObject();
+							JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
 							
 							if(object.entrySet().size() != 0) {
 								//Trample
