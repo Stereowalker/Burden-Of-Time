@@ -22,4 +22,7 @@ public class Config
     @UnionConfig.Entry(group = "Fluid Erosion", name = "Fluid Erosion Chance")
     @UnionConfig.Range(min = 0, max = 1000)
     public static int chanceForBlockToErode = 800;
+    
+    @UnionConfig.Entry(group = "Logging", name = "Send All Changes To Chat")
+    public static boolean sendToChat = false;
 }

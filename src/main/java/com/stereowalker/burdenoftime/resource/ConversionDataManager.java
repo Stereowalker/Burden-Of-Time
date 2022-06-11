@@ -114,9 +114,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 										for (JsonElement elem : fluidConversion.get("fluids").getAsJsonArray()) {
 											boolean flag2 = true;
 											if (elem.getAsJsonObject().has("id") && elem.getAsJsonObject().get("id").isJsonPrimitive()) {
-												BurdenOfTime.getInstance().getLogger().info("BOONE ID");
 												if (elem.getAsJsonObject().has("age") && elem.getAsJsonObject().get("age").isJsonPrimitive()) {
-													BurdenOfTime.getInstance().getLogger().info("BOONE AGE");
 												} else {
 													BurdenOfTime.getInstance().getLogger().info("The required age for the fluid conversion of \""+blockId+"\" with \""+elem.getAsJsonObject().get("id").getAsString()+"\"is undefined");
 													flag2 = false;
