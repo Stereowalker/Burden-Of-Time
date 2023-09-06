@@ -1,33 +1,19 @@
-buildscript {
-    repositories {
-		maven { url = 'https://maven.minecraftforge.net' }
-		maven { url = 'https://repo.spongepowered.org/maven' }
-        mavenCentral()
-    }
-	
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-		classpath 'org.parchmentmc:librarian:1.+'
-		classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
-    }
-}
-
 plugins {
-  id "com.matthewprenger.cursegradle" version "1.4.0"
+	id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+	id "com.matthewprenger.cursegradle" version "1.4.0"
+	id "com.modrinth.minotaur" version "2.+"
 }
-
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
 
 mixin {
-    add sourceSets.main, modId+".refmap.json"
+    add sourceSets.main, modFilename+"-refmap.json"
+    config "${modId}.mixins.json"
 }
 
-version = modMinecraftVersion + "-" +modVersion
+version = modMinecraftVersion + "-" +modVersion +"-"+modLoader
 group = modGroup // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = modFilename
 
@@ -43,21 +29,19 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run/client')
-
             property 'forge.logging.markers', 'REGISTRIES'
-			arg "-mixin.config="+modId+".mixins.json"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-			
-			
-            property 'mixin.env.remapRefMap', 'true'
-			property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-			
-			args '--username', 'CodeHexIO', '--uuid', "$System.env.MINECRAFTUUIDSTEREOWALKER"
+            property 'mixin.env.disableRefMap', 'true'
+
+			args '--username', 'Stereowalker', '--uuid', "$System.env.MINECRAFTUUIDSTEREOWALKER"
+			arg "--mixin.config="+modId+".mixins.json"
+
+            //property 'forge.enabledGameTestNamespaces', mod_id
 
             mods {
-                modId {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
@@ -66,14 +50,16 @@ minecraft {
         server {
             workingDirectory project.file('run/server')
             property 'forge.logging.markers', 'REGISTRIES'
-			arg "-mixin.config="+modId+".mixins.json"
+            property 'mixin.env.disableRefMap', 'true'
+            arg "--mixin.config="+modId+".mixins.json"
+
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-			property 'mixin.env.remapRefMap', 'true'
-			property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+            //property 'forge.enabledGameTestNamespaces', mod_id
 
             mods {
-                modId {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
@@ -150,6 +136,19 @@ curseforge {
 	}		
 }
 
+modrinth {
+    token = "$System.env.MODRINTH_TOKEN"
+    projectId = modId
+    versionNumber = "${project.version}"
+    versionType = "release"
+    uploadFile = jar
+    gameVersions = [modMinecraftVersion, "1.20"]
+    loaders = ["${project.modLoader}".toLowerCase()]
+	changelog = file('changelog.md').text
+    dependencies {
+        required.project "unionlib"
+    }
+}
 // Example configuration to allow publishing using the maven-publish task
 // we define a custom artifact that is sourced from the reobfJar output task
 // and then declare that to be published
@@ -163,9 +162,6 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
-			//artifact sourcesJar
-			//artifact deobfJar
-			//artifact apiJar
         }
     }
     repositories {
