@@ -137,6 +137,7 @@ curseforge {
     	id = modCurseId
 		apiKey = "$System.env.CURSEFORGEKEY"
 		changelog = file('changelog.md')
+		changelogType = "markdown"
 		releaseType = 'release'
 		addGameVersion(modMinecraftVersion)
         addGameVersion("Forge")
