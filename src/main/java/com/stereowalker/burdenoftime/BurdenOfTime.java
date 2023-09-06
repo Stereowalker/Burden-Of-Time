@@ -8,9 +8,6 @@ import com.stereowalker.unionlib.api.collectors.ReloadListeners;
 import com.stereowalker.unionlib.mod.MinecraftMod;
 import com.stereowalker.unionlib.mod.ServerSegment;
 
-import net.minecraftforge.fml.common.Mod;
-
-@Mod(value = "burdenoftime")
 public class BurdenOfTime extends MinecraftMod {
 	public static ConversionDataManager data = new ConversionDataManager();
 	public static final String ID = "burdenoftime";

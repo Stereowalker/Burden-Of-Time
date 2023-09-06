@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "burdenoftime",
+  "version": "${version}",
+
+  "name": "Burden Of Time",
+  "description": "Burden Of Time is a mod that allows your world to age without input from the player.",
+  "authors": [
+    "Stereowalker"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/burden-of-time"
+  },
+
+  "license": "All Rights Reserved",
+  "icon": "pack.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.stereowalker.burdenoftime.BurdenOfTime"
+    ]
+  },
+  "mixins": [
+    "burdenoftime.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.20",
+    "minecraft": "1.20",
+    "java": ">=17",
+	"unionlib": [">=10.1.1", "<10.2.0"]
+  },
+  "accessWidener": "burdenoftime.accesswidener",
+  "suggests": {
+    "another-mod": "*"
+  }
+}
