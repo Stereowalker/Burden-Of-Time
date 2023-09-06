@@ -1,6 +1,7 @@
 package com.stereowalker.burdenoftime.conversions;
 
 import com.stereowalker.burdenoftime.config.Config;
+import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.ResourceLocationException;
@@ -13,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class Conversion
 {
@@ -34,8 +34,8 @@ public class Conversion
 		if (fromBlock == null || toBlock == null)
 			throw new ResourceLocationException("An invalid pathlink has been detected: {" + from + ", " + to + "}");
 
-		this.from = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(from));
-		this.to = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(to));
+		this.from = RegistryHelper.getBlock(ResourceLocation.tryParse(from));
+		this.to = RegistryHelper.getBlock(ResourceLocation.tryParse(to));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

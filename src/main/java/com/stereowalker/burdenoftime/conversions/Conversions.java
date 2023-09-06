@@ -6,21 +6,21 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.stereowalker.burdenoftime.BurdenOfTime;
+import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class Conversions {
 	public static Map<ResourceLocation, TrampleErosionConversion> trample_conversions = Maps.newHashMap();
 	
 	public static void registerTrampleConversions(String from, String to, float requiredDepth) {
-		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+		if (RegistryHelper.blocks().containsKey(new ResourceLocation(from)) && RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 			trample_conversions.put(new ResourceLocation(from), new TrampleErosionConversion(from, to, requiredDepth));
 		} else {
 			String message = "";
 			boolean flag = false;
-			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from))) message = from;
-			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+			if (!RegistryHelper.blocks().containsKey(new ResourceLocation(from))) message = from;
+			if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 				if (message.isEmpty()) message = to;
 				else {
 					message = from + " and " + to;
@@ -35,13 +35,13 @@ public class Conversions {
 	public static Map<ResourceLocation, AgeErosionConversion> ageing_conversions = Maps.newHashMap();
 
 	public static void registerAgeConversions(String from, String to, int requiredAge) {
-		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+		if (RegistryHelper.blocks().containsKey(new ResourceLocation(from)) && RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 			ageing_conversions.put(new ResourceLocation(from), new AgeErosionConversion(from, to, requiredAge));
 		} else {
 			String message = "";
 			boolean flag = false;
-			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from))) message = from;
-			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+			if (!RegistryHelper.blocks().containsKey(new ResourceLocation(from))) message = from;
+			if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 				if (message.isEmpty()) message = to;
 				else {
 					message = from + " and " + to;
@@ -56,10 +56,10 @@ public class Conversions {
 	public static Map<ResourceLocation, List<FluidErosionConversion>> fluid_conversions = Maps.newHashMap();
 
 	public static void registerErosionConversions(String from, String to, int requiredAge, String... requiredFluids) {
-		if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from)) && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+		if (RegistryHelper.blocks().containsKey(new ResourceLocation(from)) && RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 			List<FluidErosionConversion> list = Lists.newArrayList();
 			for (String requiredFluid : requiredFluids) {
-				if (ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(requiredFluid))) {
+				if (RegistryHelper.fluids().containsKey(new ResourceLocation(requiredFluid))) {
 					list.add(new FluidErosionConversion(from, to, requiredAge, requiredFluid));
 				}
 			}
@@ -67,8 +67,8 @@ public class Conversions {
 		} else {
 			String message = "";
 			boolean flag = false;
-			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(from))) message = from;
-			if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+			if (!RegistryHelper.blocks().containsKey(new ResourceLocation(from))) message = from;
+			if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 				if (message.isEmpty()) message = to;
 				else {
 					message = from + " and " + to;

@@ -1,5 +1,6 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "package": "com.stereowalker.burdenoftime.mixin",
   "refmap": "burdenoftime.refmap.json",
   "compatibilityLevel": "JAVA_17",

@@ -8,8 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BurdenOfTimeClientSegment extends ClientSegment {
 
@@ -19,7 +17,6 @@ public class BurdenOfTimeClientSegment extends ClientSegment {
 	}
 	
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
 		return new ConfigScreen(previousScreen, Config.class, Component.translatable("burdenoftime.gui.config"));
 	}

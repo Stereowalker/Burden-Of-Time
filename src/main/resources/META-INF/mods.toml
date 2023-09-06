@@ -1,7 +1,7 @@
 
 modLoader="javafml"
 loaderVersion="[41,)"
-license="Creative Commons Attribution-NonCommercial-NoDerivatives 4.0"
+license="All Rights Reserved"
 issueTrackerURL="https://github.com/Stereowalker/Burden-Of-Time/issues"
 logoFile="pack.png"
 [[mods]]
@@ -10,7 +10,7 @@ version="${file.jarVersion}"
 displayName="Burden Of Time"
 updateJSONURL="https://raw.githubusercontent.com/Stereowalker/Burden-Of-Time/master/update.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/burden-of-time"
-credits="I'd like to thank my Obsidian Patreon, Komorebi, and you for downloading this mod"
+credits="I'd like to thank all my supporters on Patreon for giving me a reason to continue modding, and you for downloading and playing with this mod"
 authors="Stereowalker"
 description='''
 Burden Of Time is a mod that allows your world to age without input from the player.
@@ -41,6 +41,3 @@ Burden Of Time is a mod that allows your world to age without input from the pla
     versionRange="[10.1.1, 10.2.0]"
     ordering="NONE"
     side="BOTH"
-
-	
-

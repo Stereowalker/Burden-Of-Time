@@ -21,7 +21,6 @@ public class BurdenOfTime extends MinecraftMod {
 	public BurdenOfTime() {
 		super(ID, ()-> new BurdenOfTimeClientSegment(), ()-> new ServerSegment());
 		instance = this;
-		//MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	@Override

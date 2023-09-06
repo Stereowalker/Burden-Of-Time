@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidErosionMap extends SavedData
 {
@@ -58,7 +57,7 @@ public class FluidErosionMap extends SavedData
             BlockPos pos = map.gson.fromJson(entries[0], BlockPos.class);
 
             HashMap<Fluid, Integer> fluidMap = map.wearMap.getOrDefault(entries[0], new HashMap<>());
-            fluidMap.put(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(entries[1])), age);
+            fluidMap.put(RegistryHelper.getFluid(new ResourceLocation(entries[1])), age);
             map.wearMap.put(pos, fluidMap);
         }
         return map;

@@ -25,7 +25,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Loads block temperatures from json
@@ -42,7 +41,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 						resource.getKey().getNamespace(),
 						resource.getKey().getPath().replace("block_conversions/", "").replace(".json", "")
 						);
-				if (ForgeRegistries.BLOCKS.containsKey(blockId)) {
+				if (RegistryHelper.blocks().containsKey(blockId)) {
 					try {
 						try (InputStream stream = resource.getValue().open(); 
 								InputStreamReader reader = new InputStreamReader(stream)) {
@@ -67,7 +66,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The required depth for the trampleConversion conversion of \""+blockId+"\" is less than or equal to zero");
 									}
-									if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+									if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The conversion block for the age conversion of \""+blockId+"\" does not exist");
 									}
@@ -93,7 +92,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The required age for the age conversion of \""+blockId+"\" is less than or equal to zero");
 									}
-									if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+									if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The conversion block for the age conversion of \""+blockId+"\" does not exist");
 									}
@@ -132,12 +131,12 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 									} else flag = false;
 									
 									
-									if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(to))) {
+									if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The conversion block for the fluid conversion of \""+blockId+"\" does not exist");
 									}
 									for (Pair<String, Integer> fluid : fluids) {
-										if (!ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(fluid.getFirst()))) {
+										if (!RegistryHelper.fluids().containsKey(new ResourceLocation(fluid.getFirst()))) {
 											flag = false;
 											BurdenOfTime.getInstance().getLogger().info("The \""+fluid.getFirst()+"\" fluid for the fluid conversion of \""+blockId+"\" does not exist");
 										}
