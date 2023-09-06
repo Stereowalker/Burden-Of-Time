@@ -4,12 +4,10 @@ import com.stereowalker.burdenoftime.config.Config;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.ResourceLocationException;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -52,12 +50,12 @@ public class Conversion
 			final Block b = convertedState.getBlock();
 			if (Config.sendToChat)
 				world.players().forEach((p) -> 
-				p.sendMessage(new TextComponent("Converting "+old.getBlock()+" to "+b+" at ")
-						.append(new TextComponent("{"+pos.getX()+" "+pos.getY()+" "+pos.getZ()+"}").withStyle((p_207527_) -> {
+				p.sendSystemMessage(Component.literal("Converting "+old.getBlock()+" to "+b+" at ")
+						.append(Component.literal("{"+pos.getX()+" "+pos.getY()+" "+pos.getZ()+"}").withStyle((p_207527_) -> {
 					return p_207527_.withColor(ChatFormatting.GREEN)
 							.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.getX()+" "+pos.getY()+" "+pos.getZ()))
-							.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent("chat.coordinates.tooltip")));
-				})), Util.NIL_UUID));
+							.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.coordinates.tooltip")));
+				}))));
 			world.setBlock(pos, convertedState, 11);
 		}
 	}

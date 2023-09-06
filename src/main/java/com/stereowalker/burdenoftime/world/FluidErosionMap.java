@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.google.gson.Gson;
 import com.stereowalker.burdenoftime.BurdenOfTime;
+import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -39,7 +40,7 @@ public class FluidErosionMap extends SavedData
         	for (Fluid fluid : fluidMap.keySet()) 
         	{
         		int age = wearMap.get(entry).get(fluid);
-        		tag.putInt(gson.toJson(entry)+"#"+fluid.getRegistryName(), age);
+        		tag.putInt(gson.toJson(entry)+"#"+RegistryHelper.getFluidKey(fluid), age);
         	}
         }
         return tag;

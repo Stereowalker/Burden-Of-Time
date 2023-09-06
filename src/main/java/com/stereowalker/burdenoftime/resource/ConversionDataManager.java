@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -18,6 +19,7 @@ import com.stereowalker.burdenoftime.conversions.Conversions;
 import com.stereowalker.burdenoftime.conversions.FluidErosionConversion;
 import com.stereowalker.burdenoftime.conversions.TrampleErosionConversion;
 import com.stereowalker.unionlib.resource.IResourceReloadListener;
+import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -35,15 +37,14 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 		return CompletableFuture.supplyAsync(() -> {
 			List<Conversion> conversionMap = new ArrayList<>();
 
-			for (ResourceLocation id : manager.listResources("block_conversions", (s) -> s.endsWith(".json"))) {
+			for (Entry<ResourceLocation, Resource> resource : manager.listResources("block_conversions", (s) -> s.toString().endsWith(".json")).entrySet()) {
 				ResourceLocation blockId = new ResourceLocation(
-						id.getNamespace(),
-						id.getPath().replace("block_conversions/", "").replace(".json", "")
+						resource.getKey().getNamespace(),
+						resource.getKey().getPath().replace("block_conversions/", "").replace(".json", "")
 						);
 				if (ForgeRegistries.BLOCKS.containsKey(blockId)) {
 					try {
-						Resource resource = manager.getResource(id);
-						try (InputStream stream = resource.getInputStream(); 
+						try (InputStream stream = resource.getValue().open(); 
 								InputStreamReader reader = new InputStreamReader(stream)) {
 							
 							JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
@@ -171,15 +172,20 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 		return CompletableFuture.runAsync(() -> {
 			for (Conversion conversion : data) {
 				if (conversion instanceof TrampleErosionConversion) {
-					Conversions.registerTrampleConversions(((TrampleErosionConversion)conversion).from.getRegistryName().toString(), ((TrampleErosionConversion)conversion).to.getRegistryName().toString(), ((TrampleErosionConversion)conversion).requiredDepth);
+					Conversions.registerTrampleConversions(RegistryHelper.getBlockKey(((TrampleErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((TrampleErosionConversion)conversion).to).toString(), ((TrampleErosionConversion)conversion).requiredDepth);
 				}
 				if (conversion instanceof AgeErosionConversion) {
-					Conversions.registerAgeConversions(((AgeErosionConversion)conversion).from.getRegistryName().toString(), ((AgeErosionConversion)conversion).to.getRegistryName().toString(), ((AgeErosionConversion)conversion).requiredAge);
+					Conversions.registerAgeConversions(RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).to).toString(), ((AgeErosionConversion)conversion).requiredAge);
 				}
 				if (conversion instanceof FluidErosionConversion) {
-					Conversions.registerErosionConversions(((AgeErosionConversion)conversion).from.getRegistryName().toString(), ((AgeErosionConversion)conversion).to.getRegistryName().toString(), ((AgeErosionConversion)conversion).requiredAge);
+					Conversions.registerErosionConversions(RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).to).toString(), ((AgeErosionConversion)conversion).requiredAge);
 				}
 			}
 		}, executor);
+	}
+
+	@Override
+	public ResourceLocation id() {
+		return new ResourceLocation(BurdenOfTime.ID, "conversion_manager");
 	}
 }

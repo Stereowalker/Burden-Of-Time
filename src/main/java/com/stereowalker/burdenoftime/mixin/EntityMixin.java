@@ -1,7 +1,5 @@
 package com.stereowalker.burdenoftime.mixin;
 
-import java.util.Random;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,9 +11,11 @@ import com.stereowalker.burdenoftime.config.Config;
 import com.stereowalker.burdenoftime.conversions.Conversions;
 import com.stereowalker.burdenoftime.conversions.TrampleErosionConversion;
 import com.stereowalker.burdenoftime.world.TrampleErosionMap;
+import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,7 +26,7 @@ public abstract class EntityMixin
 {
 	@Shadow public float walkDistO;
 	@Shadow public float walkDist;
-	@Shadow @Final protected Random random;
+	@Shadow @Final protected RandomSource random;
 
 	@Shadow public abstract boolean isShiftKeyDown();
 
@@ -34,7 +34,7 @@ public abstract class EntityMixin
 
 	@Shadow public Level level;
 
-	@Shadow public abstract boolean isOnGround();
+	@Shadow private boolean onGround;
 
 	@Shadow public abstract Vec3 getDeltaMovement();
 
@@ -47,7 +47,7 @@ public abstract class EntityMixin
 		if (level.isClientSide())
 			return;
 
-		if (isSwimming() || !isOnGround() || !Conversions.trample_conversions.containsKey(level.getBlockState(getOnPos()).getBlock().getRegistryName())) return;
+		if (isSwimming() || !onGround || !Conversions.trample_conversions.containsKey(RegistryHelper.getBlockKey(level.getBlockState(getOnPos()).getBlock()))) return;
 
 		double speed = Math.abs(walkDistO - walkDist);
 
@@ -74,7 +74,7 @@ public abstract class EntityMixin
 
 		depthMapState.setDirty(true);
 		
-		TrampleErosionConversion conversion = Conversions.trample_conversions.get(state.getBlock().getRegistryName());
+		TrampleErosionConversion conversion = Conversions.trample_conversions.get(RegistryHelper.getBlockKey(state.getBlock()));
 		conversion.handleConversion(level, pos, state, currentDepth, conversion.requiredDepth);
 	}
 }

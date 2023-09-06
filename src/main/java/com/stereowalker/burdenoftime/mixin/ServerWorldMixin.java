@@ -17,6 +17,7 @@ import com.stereowalker.burdenoftime.conversions.Conversions;
 import com.stereowalker.burdenoftime.conversions.FluidErosionConversion;
 import com.stereowalker.burdenoftime.world.AgeErosionMap;
 import com.stereowalker.burdenoftime.world.FluidErosionMap;
+import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -35,12 +36,12 @@ public abstract class ServerWorldMixin
 	public abstract ServerLevel getLevel();
 
 	@Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getBlockState(III)Lnet/minecraft/world/level/block/state/BlockState;", ordinal = 0), method = "tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V", locals = LocalCapture.CAPTURE_FAILHARD)
-	public void tickEnvironment(LevelChunk chunkIn, int randomTickSpeed, CallbackInfo ci, ChunkPos chunkpos, boolean flag, int i, int j, ProfilerFiller iprofiler, LevelChunkSection var8[], int var9, int var10, LevelChunkSection chunksection, int k, int l, BlockPos blockpos1, BlockState blockstate)
+	public void tickEnvironment(LevelChunk chunkIn, int randomTickSpeed, CallbackInfo ci, ChunkPos chunkpos, boolean flag, int i, int j, ProfilerFiller iprofiler, LevelChunkSection var8[], int var9, LevelChunkSection chunksection, int var10, int k, int l, BlockPos blockpos1, BlockState blockstate)
 	{
-		if (Conversions.fluid_conversions.containsKey(blockstate.getBlock().getRegistryName())) {			
+		if (Conversions.fluid_conversions.containsKey(RegistryHelper.getBlockKey(blockstate.getBlock()))) {			
 			erodeBlock(getLevel(), blockstate, new Random(), blockpos1);
 		}
-		if (Conversions.ageing_conversions.containsKey(blockstate.getBlock().getRegistryName())) {			
+		if (Conversions.ageing_conversions.containsKey(RegistryHelper.getBlockKey(blockstate.getBlock()))) {			
 			ageBlock(getLevel(), blockstate, new Random(), blockpos1);
 		}
 	}
@@ -61,7 +62,7 @@ public abstract class ServerWorldMixin
 
 		ageMapState.setDirty(true);
 		
-		AgeErosionConversion conversion = Conversions.ageing_conversions.get(blockstate.getBlock().getRegistryName());
+		AgeErosionConversion conversion = Conversions.ageing_conversions.get(RegistryHelper.getBlockKey(blockstate.getBlock()));
 		conversion.handleConversion(world, pos, blockstate, currentAge, conversion.requiredAge);
 	}
 
@@ -82,7 +83,7 @@ public abstract class ServerWorldMixin
 			return;
 
 
-		List<FluidErosionConversion> fluidList = Conversions.fluid_conversions.get(blockstate.getBlock().getRegistryName());
+		List<FluidErosionConversion> fluidList = Conversions.fluid_conversions.get(RegistryHelper.getBlockKey(blockstate.getBlock()));
 		for (FluidErosionConversion conversion : fluidList)
 		{
 			if (world.getFluidState(pos.above()).getType() == conversion.requiredFluid 

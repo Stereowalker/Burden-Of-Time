@@ -20,7 +20,7 @@ archivesBaseName = modFilename
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-println('Mod Name: ' + modFilename + ', Mod Version: ' + modVersion + ', Minecraft Version: ' + modMinecraftVersion + ', Forge Version: ' + modForgeVersion)
+println('Mod Name: ' + modFilename + ', Mod Version: ' + modVersion + ', Minecraft Version: ' + modMinecraftVersion + ', Loader Version: ' + modLoaderVersion)
 
 minecraft {
     mappings channel: mappingsChannel, version: mappingsVersion
@@ -73,11 +73,6 @@ repositories {
 		name = "Progwml6 maven"
 		url = "https://dvs1.progwml6.com/files/maven/"
 	}
-	maven {
-		// location of a maven mirror for JEI files, as a fallback
-		name = "ModMaven"
-		url = "https://modmaven.k-4u.nl"
-	}
 	maven { 
 		url = "https://maven.theillusivec4.top/"
 	}
@@ -92,14 +87,14 @@ repositories {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:' + modMinecraftVersion + '-' + modForgeVersion
+	minecraft 'net.minecraftforge:forge:' + modMinecraftVersion + '-' + modLoaderVersion
 	annotationProcessor "org.spongepowered:mixin:"+modMixinVersion+":processor"
 	implementation "org.spongepowered:mixin:"+modMixinVersion+""
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation fg.deobf("com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+"")
 	
-	compileOnly fg.deobf("mezz.jei:jei-"+modMinecraftVersion+":"+jeiVersion+":api")
-	runtimeOnly fg.deobf("mezz.jei:jei-"+modMinecraftVersion+":"+jeiVersion+"")
+	compileOnly fg.deobf("mezz.jei:jei-${modMinecraftVersion}-forge-api:"+jeiVersion+"")
+	runtimeOnly fg.deobf("mezz.jei:jei-${modMinecraftVersion}-forge:"+jeiVersion+"")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
