@@ -104,7 +104,7 @@ curseforge {
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN") 
-    projectId = modId
+    projectId = "burden-of-time"
     versionNumber = "${project.version}"
     versionType = "release"
     uploadFile = remapJar

@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(Level.class)
-public abstract class WorldMixin
+public abstract class LevelMixin
 {
     @Shadow
     public abstract boolean isClientSide();

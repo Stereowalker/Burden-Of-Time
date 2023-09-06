@@ -30,7 +30,7 @@ import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.material.Fluid;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerWorldMixin
+public abstract class ServerLevelMixin
 {
 	@Shadow
 	public abstract ServerLevel getLevel();
