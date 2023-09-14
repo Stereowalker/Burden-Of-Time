@@ -38,6 +38,6 @@ Burden Of Time is a mod that allows your world to age without input from the pla
 [[dependencies.burdenoftime]]
     modId="unionlib"
     mandatory=true
-    versionRange="[10.1.1, 10.2.0]"
+    versionRange="[10.2.0, 10.3.0]"
     ordering="NONE"
     side="BOTH"
