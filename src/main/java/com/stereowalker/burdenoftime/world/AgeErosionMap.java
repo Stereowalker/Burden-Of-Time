@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -28,7 +29,7 @@ public class AgeErosionMap extends SavedData
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag)
+    public CompoundTag save(CompoundTag tag, Provider pRegistries)
     {
         for (BlockPos entry : ageMap.keySet())
         {
@@ -38,7 +39,7 @@ public class AgeErosionMap extends SavedData
         return tag;
     }
 
-    public static AgeErosionMap read(CompoundTag tag)
+    public static AgeErosionMap read(CompoundTag tag, Provider pRegistries)
     {
     	AgeErosionMap map = new AgeErosionMap();
         map.ageMap.clear();
@@ -57,6 +58,6 @@ public class AgeErosionMap extends SavedData
     public static AgeErosionMap getInstance(MinecraftServer server, ResourceKey<Level> dimension)
     {
     	DimensionDataStorage manager = Objects.requireNonNull(server.getLevel(dimension)).getDataStorage();
-        return manager.computeIfAbsent(AgeErosionMap::read, AgeErosionMap::new, KEY);
+        return manager.computeIfAbsent(new Factory<>(AgeErosionMap::new, AgeErosionMap::read, null), KEY);
     }
 }

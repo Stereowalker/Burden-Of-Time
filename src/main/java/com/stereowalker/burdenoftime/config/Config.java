@@ -2,10 +2,11 @@ package com.stereowalker.burdenoftime.config;
 
 import com.stereowalker.unionlib.config.UnionConfig;
 
-@UnionConfig(name = "burdenoftime")
+@UnionConfig(name = "burdenoftime", autoReload = true)
 public class Config
 {
     @UnionConfig.Entry(group = "Social Trails", name = "Trail Softening Modifier")
+    @UnionConfig.Range(min = -1000, max = 1000)
     public static float trailSofteningModifier = 1f;
 
     @UnionConfig.Entry(group = "Social Trails", name = "Ground Erosion Chance")
