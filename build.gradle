@@ -1,140 +1,34 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
-  	id "com.matthewprenger.cursegradle" version "1.4.0"
-  	id "com.modrinth.minotaur" version "2.+"
+	id "com.matthewprenger.cursegradle" version "1.4.0"
+	id "com.modrinth.minotaur" version "2.+"
 }
+apply from: "main.gradle"
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-version = modMinecraftVersion + "-" +modVersion +"-"+modLoader
-group = modGroup // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = modFilename
-
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-println('Mod Name: ' + modFilename + ', Mod Version: ' + modVersion + ', Minecraft Version: ' + modMinecraftVersion + ', '+modLoader+' Version: ' + modLoaderVersion)
-
-loom {
-    accessWidenerPath = file("src/main/resources/"+modId+".accesswidener")
-}
-
+// Should exist on all loaders and is loader specific
 repositories {
-	maven {url = "https://repo.spongepowered.org/maven"} // mixin
-	maven {url "https://www.cursemaven.com"} //cursemaven
-	maven {url "https://modmaven.dev/" } //UnionLib
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
-    }
+	maven {url "https://modmaven.dev/" }// UnionLib
+	maven {url "https://girafi.dk/maven/"}
+	maven {url "https://www.cursemaven.com"} //CurseForge
+    maven {url "https://repo.spongepowered.org/maven"} // mixin
+    maven {url 'https://maven.parchmentmc.org'}//Parchment
+    maven {url "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"}//Fuzs Mod Resources
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.modMinecraftVersion}"
+	minecraft "com.mojang:minecraft:${project._minecraft_version}"
 	mappings loom.layered() {
   		officialMojangMappings()
-  		parchment("org.parchmentmc.data:"+mappingsChannel+"-"+mappingsVersion+"@zip")
+  		//parchment("org.parchmentmc.data:parchment-"+mappingsVersion+"@zip")
 	}
-	modImplementation "net.fabricmc:fabric-loader:${project.modFabricLoaderVersion}"
-	modImplementation "curse.maven:forge_config_api-547434:4583000"
-	modImplementation "com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+""
+	modImplementation "net.fabricmc:fabric-loader:${project._loader_version}"
+	modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.0"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project._loader_api_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.modLoaderVersion}"
-	implementation 'com.electronwill.night-config:core:3.6.3'
-	implementation 'com.electronwill.night-config:toml:3.6.3'
-}
+	modImplementation ("com.stereowalker.unionlib:UnionLib:${_minecraft_version}-${_unionlib_version}-${_loader}")
 
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	it.options.release = 17
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-}
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
-curseforge {
-    project {
-    	id = modCurseId
-		apiKey = "$System.env.CURSEFORGEKEY"
-		changelog = file('changelog.md')
-		releaseType = 'release'
-        addGameVersion("${project.modLoader}")
-		addGameVersion(modMinecraftVersion)
-		addGameVersion("1.20")
-		addGameVersion("1.19.4")
-		addGameVersion("1.19.3")
-		addGameVersion("1.19.2")
-		addGameVersion("1.19.1")
-		addGameVersion("1.19")
-        relations {
-        	requiredDependency 'unionlib'
-        }
-		mainArtifact(remapJar) {
-			displayName = modFilename+"-${project.version}"
-		}
-		afterEvaluate {
-			uploadTask.dependsOn(remapJar)
-		}
-	}
-	options {
-    	debug = false // defaults to false
-    	forgeGradleIntegration = false
-  	}	
-}
-
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN") 
-    projectId = "burden-of-time"
-    versionNumber = "${project.version}"
-    versionType = "release"
-    uploadFile = remapJar
-    gameVersions = [modMinecraftVersion, "1.20", "1.19.4", "1.19.3", "1.19.2", "1.19.1", "1.19"]
-    loaders = ["${project.modLoader}".toLowerCase()]
-	changelog = file('changelog.md').text
-    dependencies {
-    	required.project "unionlib"
-    }
-}
-
-publishing {
-	tasks.publish.dependsOn 'build'
-    publications {
-        mavenJava(MavenPublication) {
-			artifact project.file("${project.buildDir}/libs/"+modFilename+"-${project.version}.jar")
-        
-        	groupId = project.group
-			artifactId = project.archivesBaseName
-			version = project.version
-        }
-    }
-    repositories {
-        maven {
-            name = "modmaven"
-			credentials {
-				username "$System.env.ARTIFACTORYUSER"
-				password "$System.env.ARTIFACTORYPASS"
-			}
-			url = "https://modmaven.dev/artifactory/local-releases/"
-        }
-    }
+	modCompileOnlyApi ("mezz.jei:jei-${_minecraft_version}-common-api:${_jei_version}")
+	modCompileOnlyApi ("mezz.jei:jei-${_minecraft_version}-neoforge-api:${_jei_version}")
+	modImplementation ("mezz.jei:jei-${_minecraft_version}-neoforge:${_jei_version}")
 }
