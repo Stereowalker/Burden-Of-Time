@@ -1,7 +1,7 @@
 {
 	"age_conversion": {
 		"to": "minecraft:mossy_cobblestone",
-		"age": 10
+		"age": 20
 	},
 	"fluid_conversion": {
 		"to": "minecraft:stone",
