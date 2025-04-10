@@ -33,8 +33,11 @@ public class AgeErosionMap extends SavedData
     {
         for (BlockPos entry : ageMap.keySet())
         {
-            int age = ageMap.get(entry);
-            tag.putInt(gson.toJson(entry), age);
+        	if (ageMap.get(entry) != null) 
+        	{
+        		int age = ageMap.get(entry);
+        		tag.putInt(gson.toJson(entry), age);
+        	}
         }
         return tag;
     }
