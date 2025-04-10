@@ -1,3 +1,7 @@
+[4.0.2]
+- Fix NPE
+- Raised the ages for block aging
+
 [4.0.1]
 - Resolved mixin errors
 
