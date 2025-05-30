@@ -48,8 +48,7 @@ public abstract class EntityMixin
 			return;
 
 		if (isSwimming() || !onGround || !Conversions.trample_conversions.containsKey(RegistryHelper.getBlockKey(level.getBlockState(getOnPos()).getBlock()))) return;
-
-		double speed = Math.abs(walkDistO - walkDist);
+		double speed = Math.abs(walkDistO - walkDist) * Config.trailSofteningModifier;
 
 		DegradeGround((float) speed);
 	}
@@ -70,7 +69,6 @@ public abstract class EntityMixin
 		float currentDepth = depthMapState.erosionMap.getOrDefault(pos, 0f) + intensity;
 		depthMapState.erosionMap.put(pos, currentDepth);
 
-		currentDepth *= Config.trailSofteningModifier;
 
 		depthMapState.setDirty(true);
 		
