@@ -6,7 +6,7 @@ import com.stereowalker.unionlib.config.UnionConfig;
 public class Config
 {
     @UnionConfig.Entry(group = "Social Trails", name = "Trail Softening Modifier")
-    @UnionConfig.Range(min = -1000, max = 1000)
+    @UnionConfig.Range(min = 0, max = 1000)
     public static float trailSofteningModifier = 1f;
 
     @UnionConfig.Entry(group = "Social Trails", name = "Ground Erosion Chance")
