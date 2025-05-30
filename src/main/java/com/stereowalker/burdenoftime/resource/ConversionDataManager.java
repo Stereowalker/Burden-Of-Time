@@ -171,16 +171,16 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 	public CompletableFuture<Void> apply(List<Conversion> data, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
 		return CompletableFuture.runAsync(() -> {
 			for (Conversion conversion : data) {
-				if (conversion instanceof TrampleErosionConversion) {
-					Conversions.registerTrampleConversions(RegistryHelper.getBlockKey(((TrampleErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((TrampleErosionConversion)conversion).to).toString(), ((TrampleErosionConversion)conversion).requiredDepth);
+				if (conversion instanceof TrampleErosionConversion trample) {
+					Conversions.registerTrampleConversions(RegistryHelper.getBlockKey(trample.from).toString(), RegistryHelper.getBlockKey(trample.to).toString(), trample.requiredDepth);
 				}
-				if (conversion instanceof AgeErosionConversion) {
-					Conversions.registerAgeConversions(RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).to).toString(), ((AgeErosionConversion)conversion).requiredAge);
+				if (conversion instanceof AgeErosionConversion age) {
+					Conversions.registerAgeConversions(RegistryHelper.getBlockKey(age.from).toString(), RegistryHelper.getBlockKey(age.to).toString(), age.requiredAge);
 				}
-				if (conversion instanceof FluidErosionConversion) {
-					Conversions.registerErosionConversions(RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).to).toString(), ((AgeErosionConversion)conversion).requiredAge);
+				if (conversion instanceof FluidErosionConversion fluid) {
+					Conversions.registerErosionConversions(RegistryHelper.getBlockKey(fluid.from).toString(), RegistryHelper.getBlockKey(fluid.to).toString(), fluid.requiredAge);
 				}
-			}
+		}
 		}, executor);
 	}
 
