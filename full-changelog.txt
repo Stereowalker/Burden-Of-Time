@@ -1,3 +1,7 @@
+[5.0.2]
+- Fix most conversions not registering
+- Fix Trail Softening Modifier not working
+
 [5.0.1]
 - Fix NPE
 - Raised the ages for block aging
