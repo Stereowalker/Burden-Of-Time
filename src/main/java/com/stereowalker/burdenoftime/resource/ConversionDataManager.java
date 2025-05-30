@@ -20,6 +20,7 @@ import com.stereowalker.burdenoftime.conversions.FluidErosionConversion;
 import com.stereowalker.burdenoftime.conversions.TrampleErosionConversion;
 import com.stereowalker.unionlib.resource.IResourceReloadListener;
 import com.stereowalker.unionlib.util.RegistryHelper;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -37,7 +38,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 			List<Conversion> conversionMap = new ArrayList<>();
 
 			for (Entry<ResourceLocation, Resource> resource : manager.listResources("block_conversions", (s) -> s.toString().endsWith(".json")).entrySet()) {
-				ResourceLocation blockId = new ResourceLocation(
+				ResourceLocation blockId = VersionHelper.toLoc(
 						resource.getKey().getNamespace(),
 						resource.getKey().getPath().replace("block_conversions/", "").replace(".json", "")
 						);
@@ -66,7 +67,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The required depth for the trampleConversion conversion of \""+blockId+"\" is less than or equal to zero");
 									}
-									if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
+									if (!RegistryHelper.blocks().containsKey(VersionHelper.toLoc(to))) {
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The conversion block for the age conversion of \""+blockId+"\" does not exist");
 									}
@@ -92,7 +93,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The required age for the age conversion of \""+blockId+"\" is less than or equal to zero");
 									}
-									if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
+									if (!RegistryHelper.blocks().containsKey(VersionHelper.toLoc(to))) {
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The conversion block for the age conversion of \""+blockId+"\" does not exist");
 									}
@@ -131,12 +132,12 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 									} else flag = false;
 									
 									
-									if (!RegistryHelper.blocks().containsKey(new ResourceLocation(to))) {
+									if (!RegistryHelper.blocks().containsKey(VersionHelper.toLoc(to))) {
 										flag = false;
 										BurdenOfTime.getInstance().getLogger().info("The conversion block for the fluid conversion of \""+blockId+"\" does not exist");
 									}
 									for (Pair<String, Integer> fluid : fluids) {
-										if (!RegistryHelper.fluids().containsKey(new ResourceLocation(fluid.getFirst()))) {
+										if (!RegistryHelper.fluids().containsKey(VersionHelper.toLoc(fluid.getFirst()))) {
 											flag = false;
 											BurdenOfTime.getInstance().getLogger().info("The \""+fluid.getFirst()+"\" fluid for the fluid conversion of \""+blockId+"\" does not exist");
 										}
@@ -170,21 +171,21 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 	public CompletableFuture<Void> apply(List<Conversion> data, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
 		return CompletableFuture.runAsync(() -> {
 			for (Conversion conversion : data) {
-				if (conversion instanceof TrampleErosionConversion) {
-					Conversions.registerTrampleConversions(RegistryHelper.getBlockKey(((TrampleErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((TrampleErosionConversion)conversion).to).toString(), ((TrampleErosionConversion)conversion).requiredDepth);
+				if (conversion instanceof TrampleErosionConversion trample) {
+					Conversions.registerTrampleConversions(RegistryHelper.getBlockKey(trample.from).toString(), RegistryHelper.getBlockKey(trample.to).toString(), trample.requiredDepth);
 				}
-				if (conversion instanceof AgeErosionConversion) {
-					Conversions.registerAgeConversions(RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).to).toString(), ((AgeErosionConversion)conversion).requiredAge);
+				if (conversion instanceof AgeErosionConversion age) {
+					Conversions.registerAgeConversions(RegistryHelper.getBlockKey(age.from).toString(), RegistryHelper.getBlockKey(age.to).toString(), age.requiredAge);
 				}
-				if (conversion instanceof FluidErosionConversion) {
-					Conversions.registerErosionConversions(RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).from).toString(), RegistryHelper.getBlockKey(((AgeErosionConversion)conversion).to).toString(), ((AgeErosionConversion)conversion).requiredAge);
+				if (conversion instanceof FluidErosionConversion fluid) {
+					Conversions.registerErosionConversions(RegistryHelper.getBlockKey(fluid.from).toString(), RegistryHelper.getBlockKey(fluid.to).toString(), fluid.requiredAge);
 				}
-			}
+		}
 		}, executor);
 	}
 
 	@Override
 	public ResourceLocation id() {
-		return new ResourceLocation(BurdenOfTime.ID, "conversion_manager");
+		return VersionHelper.toLoc(BurdenOfTime.ID, "conversion_manager");
 	}
 }
