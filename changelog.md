@@ -1,2 +1,2 @@
-- Fix NPE
-- Raised the ages for block aging
+- Fix most conversions not registering
+- Fix Trail Softening Modifier not working
