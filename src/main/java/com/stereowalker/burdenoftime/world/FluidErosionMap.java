@@ -6,6 +6,7 @@ import java.util.Objects;
 import com.google.gson.Gson;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 import com.stereowalker.unionlib.util.RegistryHelper;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -57,7 +58,7 @@ public class FluidErosionMap extends SavedData
             BlockPos pos = map.gson.fromJson(entries[0], BlockPos.class);
 
             HashMap<Fluid, Integer> fluidMap = map.wearMap.getOrDefault(entries[0], new HashMap<>());
-            fluidMap.put(RegistryHelper.getFluid(new ResourceLocation(entries[1])), age);
+            fluidMap.put(RegistryHelper.getFluid(VersionHelper.toLoc(entries[1])), age);
             map.wearMap.put(pos, fluidMap);
         }
         return map;

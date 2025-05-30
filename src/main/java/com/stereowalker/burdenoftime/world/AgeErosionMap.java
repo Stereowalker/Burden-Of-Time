@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;

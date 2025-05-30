@@ -3,6 +3,7 @@ package com.stereowalker.burdenoftime;
 import com.stereowalker.burdenoftime.config.Config;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.mod.ClientSegment;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -13,7 +14,7 @@ public class BurdenOfTimeClientSegment extends ClientSegment {
 
 	@Override
 	public ResourceLocation getModIcon() {
-		return new ResourceLocation("burdenoftime","textures/icon.png");
+		return VersionHelper.toLoc("burdenoftime","textures/icon.png");
 	}
 	
 	@Override
