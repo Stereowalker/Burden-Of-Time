@@ -1,7 +1,7 @@
 plugins {
 	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
-	id "com.matthewprenger.cursegradle" version "1.4.0"
+	id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 	id "com.modrinth.minotaur" version "2.+"
 }
 apply from: "main.gradle"
@@ -23,7 +23,6 @@ dependencies {
   		//parchment("org.parchmentmc.data:parchment-"+mappingsVersion+"@zip")
 	}
 	modImplementation "net.fabricmc:fabric-loader:${project._loader_version}"
-	modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.0"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project._loader_api_version}"
 
 	modImplementation ("com.stereowalker.unionlib:UnionLib:${_minecraft_version}-${_unionlib_version}-${_loader}")
