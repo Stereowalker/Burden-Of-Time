@@ -22,7 +22,7 @@ import com.stereowalker.unionlib.resource.IResourceReloadListener;
 import com.stereowalker.unionlib.util.RegistryHelper;
 import com.stereowalker.unionlib.util.VersionHelper;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -37,8 +37,8 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 		return CompletableFuture.supplyAsync(() -> {
 			List<Conversion> conversionMap = new ArrayList<>();
 
-			for (Entry<ResourceLocation, Resource> resource : manager.listResources("block_conversions", (s) -> s.toString().endsWith(".json")).entrySet()) {
-				ResourceLocation blockId = VersionHelper.toLoc(
+			for (Entry<Identifier, Resource> resource : manager.listResources("block_conversions", (s) -> s.toString().endsWith(".json")).entrySet()) {
+				Identifier blockId = VersionHelper.toLoc(
 						resource.getKey().getNamespace(),
 						resource.getKey().getPath().replace("block_conversions/", "").replace(".json", "")
 						);
@@ -185,7 +185,7 @@ public class ConversionDataManager implements IResourceReloadListener<List<Conve
 	}
 
 	@Override
-	public ResourceLocation id() {
+	public Identifier id() {
 		return VersionHelper.toLoc(BurdenOfTime.ID, "conversion_manager");
 	}
 }

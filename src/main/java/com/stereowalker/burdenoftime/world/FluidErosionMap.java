@@ -4,25 +4,37 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import com.google.gson.Gson;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.stereowalker.burdenoftime.BurdenOfTime;
 import com.stereowalker.unionlib.util.RegistryHelper;
 import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup.Provider;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.saveddata.SavedData.Factory;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.storage.SavedDataStorage;
 
 public class FluidErosionMap extends SavedData
 {
     public static final String KEY = BurdenOfTime.getInstance().getModid() + "fluid_map";
+    
+    private static final Codec<Fluid> FLUID_CODEC = Codec.STRING.xmap(str -> RegistryHelper.getFluid(VersionHelper.toLoc(str)), fluid -> RegistryHelper.getFluidKey(fluid).toString());
+
+    // 2. Define the Codec for the entire FluidErosionMap object
+    public static final Codec<FluidErosionMap> CODEC = RecordCodecBuilder.create(instance -> 
+    instance.group(Codec.unboundedMap(BlockPos.CODEC, Codec.unboundedMap(FLUID_CODEC, Codec.INT).xmap(HashMap::new, map -> map)).fieldOf("wear_map").forGetter(data -> data.wearMap)).apply(instance, (wearMap) -> {
+    			FluidErosionMap data = new FluidErosionMap();
+    			data.wearMap.putAll(wearMap); 
+    			return data;
+    		}));
+    public static final SavedDataType<FluidErosionMap> TYPE = new SavedDataType<>(VersionHelper.toLoc(BurdenOfTime.ID, "wear_map"), FluidErosionMap::new, CODEC, DataFixTypes.SAVED_DATA_MAP_INDEX);
 
     public HashMap<BlockPos, HashMap<Fluid, Integer>> wearMap = new HashMap<>();
     private Gson gson;
@@ -33,42 +45,9 @@ public class FluidErosionMap extends SavedData
         gson = new Gson();
     }
 
-    @Override
-    public CompoundTag save(CompoundTag tag, Provider pRegistries)
-    {
-        for (BlockPos entry : wearMap.keySet())
-        {
-        	HashMap<Fluid, Integer> fluidMap = wearMap.getOrDefault(entry, new HashMap<>());
-        	for (Fluid fluid : fluidMap.keySet()) 
-        	{
-        		int age = wearMap.get(entry).get(fluid);
-        		tag.putInt(gson.toJson(entry)+"#"+RegistryHelper.getFluidKey(fluid), age);
-        	}
-        }
-        return tag;
-    }
-
-    public static FluidErosionMap read(CompoundTag tag, Provider pRegistries)
-    {
-    	FluidErosionMap map = new FluidErosionMap();
-    	map.wearMap.clear();
-
-        for (String entry : tag.getAllKeys())
-        {
-        	String[] entries = entry.split("#");
-            int age = tag.getInt(entry);
-            BlockPos pos = map.gson.fromJson(entries[0], BlockPos.class);
-
-            HashMap<Fluid, Integer> fluidMap = map.wearMap.getOrDefault(entries[0], new HashMap<>());
-            fluidMap.put(RegistryHelper.getFluid(VersionHelper.toLoc(entries[1])), age);
-            map.wearMap.put(pos, fluidMap);
-        }
-        return map;
-    }
-
     public static FluidErosionMap getInstance(MinecraftServer server, ResourceKey<Level> dimension)
     {
-    	DimensionDataStorage manager = Objects.requireNonNull(server.getLevel(dimension)).getDataStorage();
-        return manager.computeIfAbsent(new Factory<>(FluidErosionMap::new, FluidErosionMap::read, null), KEY);
+    	SavedDataStorage manager = Objects.requireNonNull(server.getLevel(dimension)).getDataStorage();
+        return manager.computeIfAbsent(TYPE);
     }
 }
