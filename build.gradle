@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.7-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom-remap' version "1.17-SNAPSHOT"
 	id 'maven-publish'
 	id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 	id "com.modrinth.minotaur" version "2.+"
@@ -8,12 +8,12 @@ apply from: "main.gradle"
 
 // Should exist on all loaders and is loader specific
 repositories {
+	mavenLocal()
 	maven {url "https://modmaven.dev/" }// UnionLib
 	maven {url "https://girafi.dk/maven/"}
 	maven {url "https://www.cursemaven.com"} //CurseForge
     maven {url "https://repo.spongepowered.org/maven"} // mixin
     maven {url 'https://maven.parchmentmc.org'}//Parchment
-    maven {url "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"}//Fuzs Mod Resources
 }
 
 dependencies {
