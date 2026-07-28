@@ -36,7 +36,7 @@ public abstract class ServerLevelMixin
 	public abstract ServerLevel getLevel();
 
 	@Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getBlockState(III)Lnet/minecraft/world/level/block/state/BlockState;", ordinal = 0), method = "tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V", locals = LocalCapture.CAPTURE_FAILHARD)
-	public void tickEnvironment(LevelChunk chunkIn, int randomTickSpeed, CallbackInfo ci, ChunkPos chunkpos, boolean flag, int i, int j, ProfilerFiller iprofiler, LevelChunkSection var8[], int var9, LevelChunkSection chunksection, int var10, int k, int l, BlockPos blockpos1, BlockState blockstate)
+	public void tickEnvironment(LevelChunk p_chunk, int randomTickSpeed, CallbackInfo ci, ChunkPos chunkPos, int minX, int minZ, ProfilerFiller profiler, LevelChunkSection sections[], int sectionIndex, LevelChunkSection section, int sectionY, int minYInSection, int i, BlockPos blockpos1, BlockState blockstate)
 	{
 		if (Conversions.fluid_conversions.containsKey(RegistryHelper.getBlockKey(blockstate.getBlock()))) {			
 			erodeBlock(getLevel(), blockstate, new Random(), blockpos1);

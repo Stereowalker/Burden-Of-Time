@@ -9,10 +9,10 @@ import com.stereowalker.burdenoftime.BurdenOfTime;
 import com.stereowalker.unionlib.util.RegistryHelper;
 import com.stereowalker.unionlib.util.VersionHelper;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class Conversions {
-	public static Map<ResourceLocation, TrampleErosionConversion> trample_conversions = Maps.newHashMap();
+	public static Map<Identifier, TrampleErosionConversion> trample_conversions = Maps.newHashMap();
 	
 	public static void registerTrampleConversions(String from, String to, float requiredDepth) {
 		if (RegistryHelper.blocks().containsKey(VersionHelper.toLoc(from)) && RegistryHelper.blocks().containsKey(VersionHelper.toLoc(to))) {
@@ -33,7 +33,7 @@ public class Conversions {
 		}
 	}
 
-	public static Map<ResourceLocation, AgeErosionConversion> ageing_conversions = Maps.newHashMap();
+	public static Map<Identifier, AgeErosionConversion> ageing_conversions = Maps.newHashMap();
 
 	public static void registerAgeConversions(String from, String to, int requiredAge) {
 		if (RegistryHelper.blocks().containsKey(VersionHelper.toLoc(from)) && RegistryHelper.blocks().containsKey(VersionHelper.toLoc(to))) {
@@ -54,7 +54,7 @@ public class Conversions {
 		}
 	}
 
-	public static Map<ResourceLocation, List<FluidErosionConversion>> fluid_conversions = Maps.newHashMap();
+	public static Map<Identifier, List<FluidErosionConversion>> fluid_conversions = Maps.newHashMap();
 
 	public static void registerErosionConversions(String from, String to, int requiredAge, String... requiredFluids) {
 		if (RegistryHelper.blocks().containsKey(VersionHelper.toLoc(from)) && RegistryHelper.blocks().containsKey(VersionHelper.toLoc(to))) {

@@ -1,4 +1,4 @@
-project.ext._mod_jar = "remapJar"
+project.ext._mod_jar = "jar"
 
 loom {
 	mixin.defaultRefmapName.set("${_mod_id}.refmap.json")

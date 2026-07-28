@@ -8,12 +8,12 @@ import com.stereowalker.unionlib.util.VersionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class BurdenOfTimeClientSegment extends ClientSegment {
 
 	@Override
-	public ResourceLocation getModIcon() {
+	public Identifier getModIcon() {
 		return VersionHelper.toLoc("burdenoftime","textures/icon.png");
 	}
 	

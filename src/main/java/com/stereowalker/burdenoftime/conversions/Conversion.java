@@ -4,12 +4,12 @@ import com.stereowalker.burdenoftime.config.Config;
 import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,14 +28,14 @@ public class Conversion
 
 	public Conversion(String from, String to)
 	{
-		ResourceLocation fromBlock = ResourceLocation.tryParse(from);
-		ResourceLocation toBlock = ResourceLocation.tryParse(to);
+		Identifier fromBlock = Identifier.tryParse(from);
+		Identifier toBlock = Identifier.tryParse(to);
 
 		if (fromBlock == null || toBlock == null)
-			throw new ResourceLocationException("An invalid pathlink has been detected: {" + from + ", " + to + "}");
+			throw new IdentifierException("An invalid pathlink has been detected: {" + from + ", " + to + "}");
 
-		this.from = RegistryHelper.getBlock(ResourceLocation.tryParse(from));
-		this.to = RegistryHelper.getBlock(ResourceLocation.tryParse(to));
+		this.from = RegistryHelper.getBlock(Identifier.tryParse(from));
+		this.to = RegistryHelper.getBlock(Identifier.tryParse(to));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -53,8 +53,8 @@ public class Conversion
 				p.sendSystemMessage(Component.literal("Converting "+old.getBlock()+" to "+b+" at ")
 						.append(Component.literal("{"+pos.getX()+" "+pos.getY()+" "+pos.getZ()+"}").withStyle((p_207527_) -> {
 					return p_207527_.withColor(ChatFormatting.GREEN)
-							.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.getX()+" "+pos.getY()+" "+pos.getZ()))
-							.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.coordinates.tooltip")));
+							.withClickEvent(new ClickEvent.SuggestCommand("/tp @s " + pos.getX()+" "+pos.getY()+" "+pos.getZ()))
+							.withHoverEvent(new HoverEvent.ShowText(Component.translatable("chat.coordinates.tooltip")));
 				}))));
 			world.setBlock(pos, convertedState, 11);
 		}
