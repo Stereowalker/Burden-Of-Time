@@ -1,6 +1,6 @@
 {
 	"trample_conversion": {
-		"to": "burdenoftime:patchy_grass_block_1",
+		"to": "minecraft:dirt",
 		"depth": 5.0
 	}
 }
